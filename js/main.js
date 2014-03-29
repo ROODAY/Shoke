@@ -19,6 +19,18 @@ $(document).ready(function(){
 				content: {},
 				success: function(response) {
 					console.log(response);
+					var ownedPlaylists = response.result.owned;
+					for(var i = 0; i < ownedPlaylists.length; i++) {
+						var currentPlaylist = ownedPlaylists[i];
+						var name = currentPlaylist.name;
+						var key = currentPlaylist.key;
+						var li = "<li class='playlist' data-key='"
+							+ key + "'>"
+							+ (i + 1) + ". " +  name + "</li>";
+						console.log(li);
+						$("#playlists").append(li);
+					}
+					createClickTogglers();
 				},
 				error: function(response) {
 					console.log("Error: " + response.message);
@@ -26,4 +38,18 @@ $(document).ready(function(){
 			});
 		});
 	}
+
+	function createClickTogglers() {
+		$("li").on('click', function(e) {
+			e.preventDefault();
+			var key = $(this).attr("data-key");
+			console.log("Playing playlist: " + key);
+			R.player.play({source: key});
+		})
+	}
+
+	$("#playPause").click(function(){
+		console.log("Toggling play/pause");
+		R.player.togglePause();
+	})
 });
