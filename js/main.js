@@ -8,6 +8,70 @@ $(document).ready(function(){
 		})
 	});
 
+	var currentInterimTranscript = '';
+	var finalTranscript = '';
+	var recognizing = false;
+	var finishedListening = false;
+
+	if(!('webkitSpeechRecognition' in window)) {
+		alert("Sorry, your Browser does not support the Speech API.");
+	} else {
+		var recognition = new webkitSpeechRecognition();
+		recognition.continuous = true;
+		recognition.interimResults = true;
+		recognition.lang = 'en-US';
+
+		recognition.onstart = function() {
+			recognizing = true;
+			console.log("Listening now. Speak clearly.");
+		}
+
+		recognition.onerror = function() {
+			console.log("Recognition error.");
+		}
+
+		recognition.onend = function() {
+			if(finishedListening) {
+				recognizing = false;
+				console.log("Ending recognition.");
+			} else {
+				console.log("Restarting recognition.");
+				startRecording();
+			}
+		}
+
+		recognition.onresult = function(event) {
+			var savedInterimTranscript = currentInterimTranscript;
+			currentInterimTranscript = '';
+
+			for(var i = event.resultIndex; i < event.results.length; i++) {
+				if(event.results[i].isFinal) {
+					finalTranscript += event.results[i][0].transcript;
+				} else {
+					currentInterimTranscript += event.results[i][0].transcript;
+				}
+			}
+
+			console.log("interim: " + currentInterimTranscript);
+			console.log("final: " + finalTranscript);
+
+			var cIT = currentInterimTranscript.trim();
+			if(cIT == "pause" || cIT == "stop" || cIT == "paws") {
+				R.player.pause();
+			}
+
+			if(cIT == "play" || cIT == "continue") {
+				R.player.play();
+			}
+
+			// if(finalTranscript.length > 0) {
+			// 	console.log("final final transcript: " + finalTranscript);
+			// 	recognition.stop();
+			// 	recognizing = false;
+			// }
+		}
+	}
+
 	function authenticationComplete() {
 		R.ready(function() {
 			var name = R.currentUser.attributes.firstName;
@@ -44,6 +108,7 @@ $(document).ready(function(){
 			e.preventDefault();
 			var key = $(this).attr("data-key");
 			console.log("Playing playlist: " + key);
+			startRecording();
 			R.player.play({source: key});
 		})
 	}
@@ -52,4 +117,12 @@ $(document).ready(function(){
 		console.log("Toggling play/pause");
 		R.player.togglePause();
 	})
+
+	function startRecording() {
+		finalTranscript = '';
+		if(!(recognizing)) {
+			recognition.start();
+		}
+		console.log("Allow the browser to use your microphone");
+	}
 });
