@@ -2,6 +2,14 @@
 <html>
 	<head>
 		<title>ShowerBuddy</title>
+		<meta name="description" content="Voice-controlled rdio music while you shower.">
+        <meta name="keywords" content="ShowerBuddy, HackPrinceton, Rdio, Intel XDK, Athyuttam Reddy, Young-Rae Kim">
+        <meta name="author" content="Young-Rae Kim and Athyuttam Reddy">
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <!--Favicon--> <link rel="shortcut icon" href="/assets/favicon/favicon.ico" type="image/x-icon" />
+        <!--Viewport Size--> <meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<!--CSS-->
 		<link rel="stylesheet" type="text/css" href="css/rdio-utils.css">
@@ -18,13 +26,12 @@
 	</head>
 	<body>
 		<div id="container">
-			<img src="images/logo.png">
+			<img id="logo" src="assets/images/logo.png">
 			<h1>Shower Buddy</h1>
 			<p class="version">v 1.1.0</p>
 			<button id="authorize">Login</button>
-			<ul id="playlists">
-			</ul>
-			<button id="playPause">Play/Pause</button>
+			<ul id="playlists"></ul>
+			<button id="playPause" style="display: none">Play/Pause</button>
 		</div>
 	</body>
 </html>
