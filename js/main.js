@@ -75,7 +75,6 @@ $(document).ready(function(){
 				R.player.play();
 			}
 
-<<<<<<< HEAD
 			if(cIT == "next") {
 				R.player.next(true);
 			}
@@ -86,7 +85,7 @@ $(document).ready(function(){
 
 			var currentVol = R.player.volume();
 
-			if(cIT == "decrease" || cIT = "decree") {
+			if(cIT == "decrease" || cIT == "decree") {
 				R.player.volume(currentVol - 0.25);
 				console.log("currentVol: " + currentVol);
 				currentVol = currentVol - 0.25;
@@ -98,14 +97,14 @@ $(document).ready(function(){
 				console.log("currentVol: " + currentVol);
 				currentVol = currentVol + 0.25;
 				console.log("new volume (dec): " + R.player.volume());
-=======
+			}
+
 			var newWords = finalTranscript.replace(savedFinalTranscript, '').trim();
 			console.log("final transcript newWords: '" + newWords + "'");
 			if(newWords == 'pause' || newWords == 'stop' || newWords == 'paws' || newWords == 'top') {
 				R.player.pause();
 			} else if(newWords == 'play' || newWords == 'continue' || newWords == 'stock' || newWords == 'talk') {
 				R.player.play();
->>>>>>> FETCH_HEAD
 			}
 
 			// if(finalTranscript.length > 0) {
