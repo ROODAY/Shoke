@@ -89,6 +89,7 @@ $(document).ready(function(){
 			var ua = navigator.userAgent.toLowerCase();
 			var isAndroid = ua.indexOf("android") > -1;
 			if(isAndroid && (typeof window.orientation !== 'undefined')) {
+				$("#command").text(newWords);
 				if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
 					R.player.pause();
 				} else if(newWords == "play" || newWords == "continue") {
