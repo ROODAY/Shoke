@@ -25,6 +25,7 @@ $(document).ready(function(){
 	var finalTranscript = '';
 	var recognizing = false;
 	var finishedListening = false;
+	var unmuteVol = 8.11;
 
 	if(!('webkitSpeechRecognition' in window)) {
 		alert("Sorry, your Browser does not support the Speech API.");
@@ -76,34 +77,56 @@ $(document).ready(function(){
 				currentInterimTranscript = '';
 			}
 
+			R.player.repeat(R.player.REPEAT_ALL);
+
 			var cIT = currentInterimTranscript.trim();
+			var newWords = finalTranscript.replace(savedFinalTranscript, '').trim();
+
 			var currentVol = R.player.volume();
 
-			var newWords = finalTranscript.replace(savedFinalTranscript, '').trim();
 			console.log("final transcript newWords: '" + newWords + "'");
 
 			var ua = navigator.userAgent.toLowerCase();
 			var isAndroid = ua.indexOf("android") > -1;
 			if(isAndroid && (typeof window.orientation !== 'undefined')) {
-				if(newWords == 'pause' || newWords == 'stop' || newWords == 'paws' || newWords == 'top') {
+				if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
 					R.player.pause();
-				} else if(newWords == 'play' || newWords == 'continue' || newWords == 'stock' || newWords == 'talk') {
+				} else if(newWords == "play" || newWords == "continue") {
 					R.player.play();
 				} else if(newWords == "next") {
 					R.player.next(true);
-				} else if(newWords == "previous" || newWords == "Prius") {
+				} else if(newWords == "previous" || newWords == "Prius" || newWords == "previews") {
 					R.player.previous();
-				} else if(newWords == "decrease" || newWords == "decree") {
+				} else if(newWords == "decrease volume" || newWords == "decrees volume" || newWords == "degrees volume" || newWords == "softer" || newWords == "quieter") {
 					R.player.volume(currentVol - 0.25);
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol - 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} else if(newWords == "increase") {
+				} else if(newWords == "mute" && unmuteVol > 0.0) {
+					console.log("mute before: " + unmuteVol);
+					unmuteVol = R.player.volume();
+					R.player.volume(0.0);
+					console.log("mute after: " + unmuteVol);
+				} else if((newWords == "un mute" || newWords == "unmute") && currentVol == 0.0) {
+					console.log("mute before: " + unmuteVol);
+					R.player.volume(unmuteVol);
+					console.log("mute after: " + unmuteVol);
+				} else if(newWords == "increase volume" || newWords == "louder") {
 					R.player.volume(currentVol + 0.25);
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol + 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} 
+				} else if(newWords == "max volume" || newWords == "maximum volume") {
+					R.player.volume(1.0);
+				} else if(newWords == "shuffle on") {
+					console.log("current shuffle: " + R.player.shuffle());
+					R.player.shuffle(true);
+					console.log("new shuffle: " + R.player.shuffle());
+				} else if(newWords == "shuffle off") {
+					console.log("current shuffle: " + R.player.shuffle());
+					R.player.shuffle(false);
+					console.log("new shuffle: " + R.player.shuffle());
+				}
 			} else {
 				if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
 					R.player.pause();
@@ -111,19 +134,38 @@ $(document).ready(function(){
 					R.player.play();
 				} else if(cIT == "next") {
 					R.player.next(true);
-				} else if(cIT == "previous" || cIT == "Prius") {
+				} else if(cIT == "previous" || cIT == "Prius" || cIT == "previews") {
 					R.player.previous();
-				} else if(cIT == "decrease" || cIT == "decree") {
+				} else if(cIT == "decrease volume" || cIT == "decrees volume" || cIT == "degrees volume" || cIT == "softer" || cIT == "quieter") {
 					R.player.volume(currentVol - 0.25);
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol - 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} else if(cIT == "increase") {
+				} else if(cIT == "mute" && unmuteVol > 0.0) {
+					console.log("mute before: " + unmuteVol);
+					unmuteVol = R.player.volume();
+					R.player.volume(0.0);
+					console.log("mute after: " + unmuteVol);
+				} else if((cIT == "un mute" || cIT == "unmute") && currentVol == 0.0) {
+					console.log("mute before: " + unmuteVol);
+					R.player.volume(unmuteVol);
+					console.log("mute after: " + unmuteVol);
+				} else if(cIT == "increase volume" || cIT == "louder") {
 					R.player.volume(currentVol + 0.25);
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol + 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} 
+				} else if(cIT == "max volume" || cIT == "maximum volume") {
+					R.player.volume(1.0);
+				} else if(cIT == "shuffle on") {
+					console.log("current shuffle: " + R.player.shuffle());
+					R.player.shuffle(true);
+					console.log("new shuffle: " + R.player.shuffle());
+				} else if(cIT == "shuffle off") {
+					console.log("current shuffle: " + R.player.shuffle());
+					R.player.shuffle(false);
+					console.log("new shuffle: " + R.player.shuffle());
+				}
 			}
 		}
 	}
