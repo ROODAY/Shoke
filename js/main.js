@@ -42,8 +42,8 @@ $(document).ready(function(){
 		}
 
 		recognition.onend = function() {
+			recognizing = false;
 			if(finishedListening) {
-				recognizing = false;
 				console.log("Ending recognition.");
 			} else {
 				console.log("Restarting recognition.");
