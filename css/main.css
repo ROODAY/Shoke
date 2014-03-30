@@ -21,6 +21,8 @@ body {
 #container {
 	text-align: center;
 	margin-top: 2em;
+	margin: auto;
+	max-width: 600px;
 }
 
 #logo {
@@ -45,7 +47,7 @@ button, button:focus, input, input:focus {
 	outline:0;
 }
 
-#authorize {
+button {
 	margin-top: 40px;
 	width: 180px;
 	height: 40px;
@@ -61,7 +63,17 @@ button, button:focus, input, input:focus {
 	transition: 0.25s;
 }
 
-#authorize:hover {
+#microphoneAccess > h2 {
+	margin-top: 40px;
+}
+
+#microphoneButton {
+	text-transform: none;
+	width: 250px;
+	margin-top: 20px;
+}
+
+button:hover {
 	border: 2px solid rgb(2, 144, 214);
 	cursor: pointer;
 	background-color: #0285D2;
@@ -70,6 +82,8 @@ button, button:focus, input, input:focus {
 
 h2 {
 	font-size: 1.5em;
+	width: 80%;
+	margin: auto;
 	margin-top: 20px;
 	color: #0285D2;
 }
@@ -77,12 +91,40 @@ h2 {
 #playlists {
 	width: 100%;
 	max-width: 400px;
-	height: 30px;
-	margin: 1em auto;
+	margin: 2em auto;
+	border-top: 1px solid #8297AF;
 }
 
 #playlists > li {
-	line-height: 30px;
-	border: 1px solid #0285D2;
+	text-align: left;
+	height: 80px;
+	border-bottom: 1px solid #8297AF;
 	cursor: pointer;
+	padding: 10px 10px;
+}
+
+.playlistImage {
+	height: 80px;
+	width: 80px;
+	vertical-align: middle;
+}
+
+.playlistName {
+	font-size: 1.2em;
+	vertical-align: top;
+	margin-left: 10px;
+	margin-top: 3px;
+}
+
+#playlists > li:hover {
+	background-color: rgb(245, 248, 250);
+}
+
+p {
+	margin: 0.5em auto;
+	line-height: 1.1em;
+}
+
+#container > p {
+	margin-top: 40px;
 }

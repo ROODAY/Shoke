@@ -206,10 +206,8 @@ $(document).ready(function(){
 						var currentPlaylist = ownedPlaylists[i];
 						var name = currentPlaylist.name;
 						var key = currentPlaylist.key;
-						var li = "<li class='playlist' data-key='"
-							+ key + "'>"
-							+ (i + 1) + ". " +  name + "</li>";
-						console.log(li);
+						var icon = currentPlaylist.icon;
+						var li = createPlaylistThumb(name, key, icon);
 						$("#playlists").append(li);
 					}
 					createClickTogglers();
@@ -255,5 +253,15 @@ $(document).ready(function(){
 		$(identifier).fadeOut('fast', function() {
 			this.remove();
 		})
+	}
+
+	function createPlaylistThumb(name, key, icon) {
+		var result = "<li class='.playlist' data-key='";
+		result += key + "'>";
+		result += "<img class='playlistImage' src='" + icon + "'>";
+		result += "<span class='playlistName'>" + name + "</span>";
+		result += "</li>"
+		console.log(result);
+		return result;
 	}
 });
