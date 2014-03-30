@@ -53,6 +53,7 @@ $(document).ready(function(){
 
 		recognition.onresult = function(event) {
 			var savedFinalTranscript = finalTranscript;
+			var previousInterimTranscript = currentInterimTranscript;
 			currentInterimTranscript = '';
 
 			for(var i = event.resultIndex; i < event.results.length; i++) {
@@ -66,46 +67,61 @@ $(document).ready(function(){
 			console.log("interim: '" + currentInterimTranscript + "'");
 			console.log("final: '" + finalTranscript + "'");
 
+			if(previousInterimTranscript == currentInterimTranscript) {
+				currentInterimTranscript = '';
+			}
+
 			var cIT = currentInterimTranscript.trim();
-			if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
-				R.player.pause();
-			}
-
-			if(cIT == "play" || cIT == "continue") {
-				R.player.play();
-			}
-
-			if(cIT == "next") {
-				R.player.next(true);
-			}
-
-			if(cIT == "previous" || cIT == "Prius") {
-				R.player.previous();
-			}
-
 			var currentVol = R.player.volume();
-
-			if(cIT == "decrease" || cIT == "decree") {
-				R.player.volume(currentVol - 0.25);
-				console.log("currentVol: " + currentVol);
-				currentVol = currentVol - 0.25;
-				console.log("new volume (dec): " + R.player.volume());
-			}
-
-			if(cIT == "increase") {
-				R.player.volume(currentVol + 0.25);
-				console.log("currentVol: " + currentVol);
-				currentVol = currentVol + 0.25;
-				console.log("new volume (dec): " + R.player.volume());
-			}
 
 			var newWords = finalTranscript.replace(savedFinalTranscript, '').trim();
 			console.log("final transcript newWords: '" + newWords + "'");
-			if(newWords == 'pause' || newWords == 'stop' || newWords == 'paws' || newWords == 'top') {
-				R.player.pause();
-			} else if(newWords == 'play' || newWords == 'continue' || newWords == 'stock' || newWords == 'talk') {
-				R.player.play();
+
+			var ua = navigator.userAgent.toLowerCase();
+			var isAndroid = ua.indexOf("android") > -1;
+			if(isAndroid && (typeof window.orientation !== 'undefined')) {
+				if(newWords == 'pause' || newWords == 'stop' || newWords == 'paws' || newWords == 'top') {
+					R.player.pause();
+				} else if(newWords == 'play' || newWords == 'continue' || newWords == 'stock' || newWords == 'talk') {
+					R.player.play();
+				} else if(newWords == "next") {
+					R.player.next(true);
+				} else if(newWords == "previous" || newWords == "Prius") {
+					R.player.previous();
+				} else if(newWords == "decrease" || newWords == "decree") {
+					R.player.volume(currentVol - 0.25);
+					console.log("currentVol: " + currentVol);
+					currentVol = currentVol - 0.25;
+					console.log("new volume (dec): " + R.player.volume());
+				} else if(newWords == "increase") {
+					R.player.volume(currentVol + 0.25);
+					console.log("currentVol: " + currentVol);
+					currentVol = currentVol + 0.25;
+					console.log("new volume (dec): " + R.player.volume());
+				} 
+			} else {
+				if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
+					R.player.pause();
+				} else if(cIT == "play" || cIT == "continue") {
+					R.player.play();
+				} else if(cIT == "next") {
+					R.player.next(true);
+				} else if(cIT == "previous" || cIT == "Prius") {
+					R.player.previous();
+				} else if(cIT == "decrease" || cIT == "decree") {
+					R.player.volume(currentVol - 0.25);
+					console.log("currentVol: " + currentVol);
+					currentVol = currentVol - 0.25;
+					console.log("new volume (dec): " + R.player.volume());
+				} else if(cIT == "increase") {
+					R.player.volume(currentVol + 0.25);
+					console.log("currentVol: " + currentVol);
+					currentVol = currentVol + 0.25;
+					console.log("new volume (dec): " + R.player.volume());
+				} 
 			}
+
+			
 
 			// if(finalTranscript.length > 0) {
 			// 	console.log("final final transcript: " + finalTranscript);
