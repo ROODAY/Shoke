@@ -237,16 +237,13 @@ $(document).ready(function(){
 						var currentPlaylist = allPlaylists[i];
 						var name = currentPlaylist.name;
 						var key = currentPlaylist.key;
-<<<<<<< HEAD
 						var li = "<li class='playlist' data-key='"
 							+ key +  "' data-index='"
 							+ i + "'>"
 							+ (i + 1) + ". " +  name + "</li>";
 						console.log(li);
-=======
 						var icon = currentPlaylist.icon;
 						var li = createPlaylistThumb(name, key, icon);
->>>>>>> FETCH_HEAD
 						$("#playlists").append(li);
 					}
 					createClickTogglers();
@@ -296,7 +293,6 @@ $(document).ready(function(){
 		})
 	}
 
-<<<<<<< HEAD
 	function startSB() {
 		var defaultPL = playlists[0];
 		var key = defaultPL.key;
@@ -310,7 +306,8 @@ $(document).ready(function(){
 		var key = currPlaylist.key;
 		console.log("Playing playlist: " + key);
 		R.player.play({source: key});
-=======
+	}
+
 	function createPlaylistThumb(name, key, icon) {
 		var result = "<li class='.playlist' data-key='";
 		result += key + "'>";
@@ -319,6 +316,5 @@ $(document).ready(function(){
 		result += "</li>"
 		console.log(result);
 		return result;
->>>>>>> FETCH_HEAD
 	}
 });
