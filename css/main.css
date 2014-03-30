@@ -47,7 +47,7 @@ button, button:focus, input, input:focus {
 	outline:0;
 }
 
-button {
+#authorize, #microphoneButton {
 	margin-top: 40px;
 	width: 180px;
 	height: 40px;
@@ -73,7 +73,7 @@ button {
 	margin-top: 20px;
 }
 
-button:hover {
+#authorize:hover, #microphoneButton:hover {
 	border: 2px solid rgb(2, 144, 214);
 	cursor: pointer;
 	background-color: #0285D2;
@@ -86,6 +86,22 @@ h2 {
 	margin: auto;
 	margin-top: 20px;
 	color: #0285D2;
+}
+
+#playPause {
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+	margin-top: 1em;
+	background-color: white;
+	background-image: url('../assets/images/Play.png') no-repeat scroll 0 0 transparent;
+}
+
+.play {
+}
+
+.pause {
+	background-image: url('../assets/images/Pause.png');
 }
 
 #playlists {
