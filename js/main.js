@@ -63,8 +63,8 @@ $(document).ready(function(){
 				}
 			}
 
-			console.log("interim: " + currentInterimTranscript);
-			console.log("final: " + finalTranscript);
+			console.log("interim: '" + currentInterimTranscript + "'");
+			console.log("final: '" + finalTranscript + "'");
 
 			var cIT = currentInterimTranscript.trim();
 			if(cIT == "pause" || cIT == "stop" || cIT == "paws" || cIT == "top") {
@@ -75,11 +75,11 @@ $(document).ready(function(){
 				R.player.play();
 			}
 
-			var newWords = finalTranscript.replace(savedFinalTranscript, '');
-			console.log("final transcript newWords: " + newWords);
+			var newWords = finalTranscript.replace(savedFinalTranscript, '').trim();
+			console.log("final transcript newWords: '" + newWords + "'");
 			if(newWords == 'pause' || newWords == 'stop' || newWords == 'paws' || newWords == 'top') {
 				R.player.pause();
-			} else if(newWords == 'play' || newWords == 'continue') {
+			} else if(newWords == 'play' || newWords == 'continue' || newWords == 'stock' || newWords == 'talk') {
 				R.player.play();
 			}
 
