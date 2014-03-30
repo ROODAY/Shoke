@@ -19,6 +19,8 @@ $(document).ready(function(){
 		})
 	});
 
+	////// RECOGNITION LOGIC ///////
+
 	var currentInterimTranscript = '';
 	var finalTranscript = '';
 	var recognizing = false;
@@ -35,6 +37,9 @@ $(document).ready(function(){
 		recognition.onstart = function() {
 			recognizing = true;
 			console.log("Listening now. Speak clearly.");
+			if($("#playItems").css('display') == 'none') {
+				enterPlayMode();
+			}
 		}
 
 		recognition.onerror = function() {
@@ -120,21 +125,33 @@ $(document).ready(function(){
 					console.log("new volume (dec): " + R.player.volume());
 				} 
 			}
-
-			
-
-			// if(finalTranscript.length > 0) {
-			// 	console.log("final final transcript: " + finalTranscript);
-			// 	recognition.stop();
-			// 	recognizing = false;
-			// }
 		}
 	}
 
+	///// FUNCTIONS //////
+
 	function authenticationComplete() {
 		R.ready(function() {
+			//Hide and remove current elements
+			fadeOutAndRemove('#loginItems');
+			$("#microphoneAccess").fadeIn('fast');
+		});
+	}
+
+	function notAuthenticated() {
+		$("#loginItems").fadeIn('fast');
+	}
+
+	$("#microphoneButton").click(function() {
+		startRecording();
+	})
+
+	function enterPlayMode() {
+		R.ready(function() {
+			fadeOutAndRemove('#microphoneAccess');
+			$("#playItems").fadeIn('fast');
 			var name = R.currentUser.attributes.firstName;
-			$("#container").append("<p>Welcome, " + name + "!</p>");
+			$("#container").prepend("<p>Welcome, " + name + "!</p>");
 
 			//Get Playlists
 			R.request({
@@ -174,14 +191,6 @@ $(document).ready(function(){
 		})
 	}
 
-	$("#recordingToggle").click(function() {
-		if(recognizing) {
-			stopRecording();
-		} else {
-			startRecording();
-		}
-	})
-
 	$("#playPause").click(function(){
 		console.log("Toggling play/pause");
 		R.player.togglePause();
@@ -190,13 +199,19 @@ $(document).ready(function(){
 	function startRecording() {
 		finalTranscript = '';
 		if(!(recognizing)) {
+			console.log("If asked, please allow the browser to use your microphone");
 			recognition.start();
 		}
-		console.log("If asked, please allow the browser to use your microphone");
 	}
 
 	function stopRecording() {
 		recognition.stop();
 		console.log("Stopped recognition.");
+	}
+
+	function fadeOutAndRemove(identifier) {
+		$(identifier).fadeOut('fast', function() {
+			this.remove();
+		})
 	}
 });

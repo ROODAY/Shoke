@@ -26,13 +26,22 @@
 	</head>
 	<body>
 		<div id="container">
-			<img id="logo" src="assets/images/logo.png">
-			<h1>Shower Buddy</h1>
-			<p class="version">v 1.1.0</p>
-			<button id="authorize">Login</button>
-			<button id="playPause" style="display: none">Play/Pause</button>
-			<button id="recordingToggle">Start/Stop Recording</button>
-			<ul id="playlists"></ul>
+			<div id="loginItems" style="display: none">
+				<img id="logo" src="assets/images/logo.png">
+				<h1>Shower Buddy</h1>
+				<p class="version">v 1.1.0</p>
+				<button id="authorize">Login</button>
+			</div>
+
+			<div id="microphoneAccess" style="display: none">
+				<button id="microphoneButton">Allow Microphone Access</button>
+			</div>
+
+			<div id="playItems" style="display: none">
+				<h2>Let's karaoke. <br> Pick a playlist for your shower.</h2>
+				<button id="playPause" style="display: none">Play/Pause</button>
+				<ul id="playlists"></ul>
+			</div>
 		</div>
 	</body>
 </html>
