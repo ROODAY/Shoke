@@ -68,6 +68,7 @@ $(document).ready(function(){
 
 			var cIT = currentInterimTranscript.trim();
 			if(cIT == "pause" || cIT == "stop" || cIT == "paws" || cIT == "top") {
+			if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
 				R.player.pause();
 			}
 
