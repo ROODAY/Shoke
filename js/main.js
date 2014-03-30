@@ -94,14 +94,11 @@ $(document).ready(function(){
 			var ua = navigator.userAgent.toLowerCase();
 			var isAndroid = ua.indexOf("android") > -1;
 			if(isAndroid && (typeof window.orientation !== 'undefined')) {
-<<<<<<< HEAD
 				$("#command").text(newWords);
 				if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
-=======
 				if(newWords == "start") {
 					startSB();
 				} else if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
->>>>>>> FETCH_HEAD
 					R.player.pause();
 				} else if(newWords == "play" || newWords == "continue") {
 					R.player.play();
