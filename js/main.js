@@ -25,7 +25,7 @@ $(document).ready(function(){
 	var finalTranscript = '';
 	var recognizing = false;
 	var finishedListening = false;
-	var unmuteVol = 8.11;
+	var unmuteVol = 1.0;
 
 	if(!('webkitSpeechRecognition' in window)) {
 		alert("Sorry, your Browser does not support the Speech API.");
@@ -102,12 +102,12 @@ $(document).ready(function(){
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol - 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} else if(newWords == "mute" && unmuteVol > 0.0) {
+				} else if((newWords == "mute" || newWords == "nude") && unmuteVol > 0.0) {
 					console.log("mute before: " + unmuteVol);
 					unmuteVol = R.player.volume();
 					R.player.volume(0.0);
 					console.log("mute after: " + unmuteVol);
-				} else if((newWords == "un mute" || newWords == "unmute") && currentVol == 0.0) {
+				} else if((newWords == "un mute" || newWords == "unmute" || newWords == "onion") && currentVol == 0.0) {
 					console.log("mute before: " + unmuteVol);
 					R.player.volume(unmuteVol);
 					console.log("mute after: " + unmuteVol);
@@ -141,12 +141,12 @@ $(document).ready(function(){
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol - 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} else if(cIT == "mute" && unmuteVol > 0.0) {
+				} else if((cIT == "mute" || cIT == "nude") && unmuteVol > 0.0) {
 					console.log("mute before: " + unmuteVol);
 					unmuteVol = R.player.volume();
 					R.player.volume(0.0);
 					console.log("mute after: " + unmuteVol);
-				} else if((cIT == "un mute" || cIT == "unmute") && currentVol == 0.0) {
+				} else if((cIT == "un mute" || cIT == "unmute" || cIT == "onion") && currentVol == 0.0) {
 					console.log("mute before: " + unmuteVol);
 					R.player.volume(unmuteVol);
 					console.log("mute after: " + unmuteVol);
