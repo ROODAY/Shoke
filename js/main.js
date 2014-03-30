@@ -42,8 +42,8 @@ $(document).ready(function(){
 		}
 
 		recognition.onend = function() {
+			recognizing = false;
 			if(finishedListening) {
-				recognizing = false;
 				console.log("Ending recognition.");
 			} else {
 				console.log("Restarting recognition.");
@@ -52,7 +52,7 @@ $(document).ready(function(){
 		}
 
 		recognition.onresult = function(event) {
-			var savedInterimTranscript = currentInterimTranscript;
+			var savedFinalTranscript = finalTranscript;
 			currentInterimTranscript = '';
 
 			for(var i = event.resultIndex; i < event.results.length; i++) {
@@ -63,8 +63,8 @@ $(document).ready(function(){
 				}
 			}
 
-			console.log("interim: " + currentInterimTranscript);
-			console.log("final: " + finalTranscript);
+			console.log("interim: '" + currentInterimTranscript + "'");
+			console.log("final: '" + finalTranscript + "'");
 
 			var cIT = currentInterimTranscript.trim();
 			if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
@@ -75,6 +75,7 @@ $(document).ready(function(){
 				R.player.play();
 			}
 
+<<<<<<< HEAD
 			if(cIT == "next") {
 				R.player.next(true);
 			}
@@ -97,6 +98,14 @@ $(document).ready(function(){
 				console.log("currentVol: " + currentVol);
 				currentVol = currentVol + 0.25;
 				console.log("new volume (dec): " + R.player.volume());
+=======
+			var newWords = finalTranscript.replace(savedFinalTranscript, '').trim();
+			console.log("final transcript newWords: '" + newWords + "'");
+			if(newWords == 'pause' || newWords == 'stop' || newWords == 'paws' || newWords == 'top') {
+				R.player.pause();
+			} else if(newWords == 'play' || newWords == 'continue' || newWords == 'stock' || newWords == 'talk') {
+				R.player.play();
+>>>>>>> FETCH_HEAD
 			}
 
 			// if(finalTranscript.length > 0) {
@@ -143,10 +152,20 @@ $(document).ready(function(){
 			e.preventDefault();
 			var key = $(this).attr("data-key");
 			console.log("Playing playlist: " + key);
-			startRecording();
+			if(!(recognizing)) {
+				startRecording();
+			}
 			R.player.play({source: key});
 		})
 	}
+
+	$("#recordingToggle").click(function() {
+		if(recognizing) {
+			stopRecording();
+		} else {
+			startRecording();
+		}
+	})
 
 	$("#playPause").click(function(){
 		console.log("Toggling play/pause");
@@ -158,6 +177,11 @@ $(document).ready(function(){
 		if(!(recognizing)) {
 			recognition.start();
 		}
-		console.log("Allow the browser to use your microphone");
+		console.log("If asked, please allow the browser to use your microphone");
+	}
+
+	function stopRecording() {
+		recognition.stop();
+		console.log("Stopped recognition.");
 	}
 });
