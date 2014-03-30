@@ -67,13 +67,36 @@ $(document).ready(function(){
 			console.log("final: " + finalTranscript);
 
 			var cIT = currentInterimTranscript.trim();
-			if(cIT == "pause" || cIT == "stop" || cIT == "paws" || cIT == "top") {
 			if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
 				R.player.pause();
 			}
 
 			if(cIT == "play" || cIT == "continue") {
 				R.player.play();
+			}
+
+			if(cIT == "next") {
+				R.player.next(true);
+			}
+
+			if(cIT == "previous" || cIT == "Prius") {
+				R.player.previous();
+			}
+
+			var currentVol = R.player.volume();
+
+			if(cIT == "decrease" || cIT = "decree") {
+				R.player.volume(currentVol - 0.25);
+				console.log("currentVol: " + currentVol);
+				currentVol = currentVol - 0.25;
+				console.log("new volume (dec): " + R.player.volume());
+			}
+
+			if(cIT == "increase") {
+				R.player.volume(currentVol + 0.25);
+				console.log("currentVol: " + currentVol);
+				currentVol = currentVol + 0.25;
+				console.log("new volume (dec): " + R.player.volume());
 			}
 
 			// if(finalTranscript.length > 0) {
