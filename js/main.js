@@ -95,7 +95,6 @@ $(document).ready(function(){
 			var isAndroid = ua.indexOf("android") > -1;
 			if(isAndroid && (typeof window.orientation !== 'undefined')) {
 				$("#command").text(newWords);
-				if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
 				if(newWords == "start") {
 					startSB();
 				} else if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
@@ -268,13 +267,13 @@ $(document).ready(function(){
 				startRecording();
 			}
 			R.player.play({source: key});
-		})
+		});
 	}
 
 	$("#playPause").click(function(){
 		console.log("Toggling play/pause");
 		R.player.togglePause();
-	})
+	});
 
 	function startRecording() {
 		finalTranscript = '';
@@ -292,7 +291,7 @@ $(document).ready(function(){
 	function fadeOutAndRemove(identifier) {
 		$(identifier).fadeOut('fast', function() {
 			this.remove();
-		})
+		});
 	}
 
 	function startSB() {
@@ -315,7 +314,7 @@ $(document).ready(function(){
 		result += key + "'>";
 		result += "<img class='playlistImage' src='" + icon + "'>";
 		result += "<span class='playlistName'>" + name + "</span>";
-		result += "</li>"
+		result += "</li>";
 		console.log(result);
 		return result;
 	}
