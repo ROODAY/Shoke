@@ -52,7 +52,7 @@ $(document).ready(function(){
 		}
 
 		recognition.onresult = function(event) {
-			var savedInterimTranscript = currentInterimTranscript;
+			var savedFinalTranscript = finalTranscript;
 			currentInterimTranscript = '';
 
 			for(var i = event.resultIndex; i < event.results.length; i++) {
@@ -72,6 +72,14 @@ $(document).ready(function(){
 			}
 
 			if(cIT == "play" || cIT == "continue") {
+				R.player.play();
+			}
+
+			var newWords = finalTranscript.replace(savedFinalTranscript, '');
+			console.log("final transcript newWords: " + newWords);
+			if(newWords == 'pause' || newWords == 'stop' || newWords == 'paws' || newWords == 'top') {
+				R.player.pause();
+			} else if(newWords == 'play' || newWords == 'continue') {
 				R.player.play();
 			}
 
@@ -119,10 +127,20 @@ $(document).ready(function(){
 			e.preventDefault();
 			var key = $(this).attr("data-key");
 			console.log("Playing playlist: " + key);
-			startRecording();
+			if(!(recognizing)) {
+				startRecording();
+			}
 			R.player.play({source: key});
 		})
 	}
+
+	$("#recordingToggle").click(function() {
+		if(recognizing) {
+			stopRecording();
+		} else {
+			startRecording();
+		}
+	})
 
 	$("#playPause").click(function(){
 		console.log("Toggling play/pause");
@@ -134,6 +152,11 @@ $(document).ready(function(){
 		if(!(recognizing)) {
 			recognition.start();
 		}
-		console.log("Allow the browser to use your microphone");
+		console.log("If asked, please allow the browser to use your microphone");
+	}
+
+	function stopRecording() {
+		recognition.stop();
+		console.log("Stopped recognition.");
 	}
 });
