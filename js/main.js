@@ -19,13 +19,18 @@ $(document).ready(function(){
 		})
 	});
 
-	////// RECOGNITION LOGIC ///////
+	/////// RECOGNITION LOGIC ///////
 
 	var currentInterimTranscript = '';
 	var finalTranscript = '';
 	var recognizing = false;
 	var finishedListening = false;
-	var unmuteVol = 1.0;
+	
+	/////// GLOBAL VARIABLES ///////
+	var unmuteVol = 3.14159;
+	var playlists = new Array();
+	var currPlaylist = "";
+	var currPlaylistIndex = "";
 
 	if(!('webkitSpeechRecognition' in window)) {
 		alert("Sorry, your Browser does not support the Speech API.");
@@ -89,28 +94,33 @@ $(document).ready(function(){
 			var ua = navigator.userAgent.toLowerCase();
 			var isAndroid = ua.indexOf("android") > -1;
 			if(isAndroid && (typeof window.orientation !== 'undefined')) {
-				if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
+				if(newWords == "start") {
+					startSB();
+				} else if(newWords == "pause" || newWords == "paws" || newWords == "POS" || newWords == "stop" || newWords == "top") {
 					R.player.pause();
 				} else if(newWords == "play" || newWords == "continue") {
 					R.player.play();
 				} else if(newWords == "next") {
-					R.player.next(true);
-				} else if(newWords == "previous" || newWords == "Prius" || newWords == "previews") {
+					R.player.next();
+				} else if(newWords == "next playlist" || newWords == "NEX playlist" || newWords == "X playlist" || newWords == "explicit" || newWords == "explain list") {
+					playNextPlaylist();
+					console.log("name: " + currPlaylist.name + " index: " + currPlaylistIndex);
+				} else if(newWords == "previous" || newWords == "Prius" || newWords == "previews" || newWords == "back") {
 					R.player.previous();
-				} else if(newWords == "decrease volume" || newWords == "decrees volume" || newWords == "degrees volume" || newWords == "softer" || newWords == "quieter") {
+				} else if(newWords == "decrease volume" || newWords == "decrees volume" || newWords == "degrees volume" || newWords == "lower volume" || newWords == "softer" || newWords == "quieter") {
 					R.player.volume(currentVol - 0.25);
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol - 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} else if((newWords == "mute" || newWords == "nude") && unmuteVol > 0.0) {
-					console.log("mute before: " + unmuteVol);
+				} else if((newWords == "mute" || newWords == "nude") && currentVol > 0.0) {
+					console.log("mute before: " + R.player.volume());
 					unmuteVol = R.player.volume();
 					R.player.volume(0.0);
-					console.log("mute after: " + unmuteVol);
-				} else if((newWords == "un mute" || newWords == "unmute" || newWords == "onion") && currentVol == 0.0) {
-					console.log("mute before: " + unmuteVol);
+					console.log("mute after: " + R.player.volume());
+				} else if((newWords == "un mute" || newWords == "unmute" || newWords == "onion") && currentVol == 0.0 && unmuteVol != 3.14159) {
+					console.log("mute before: " + R.player.volume());
 					R.player.volume(unmuteVol);
-					console.log("mute after: " + unmuteVol);
+					console.log("mute after: " + R.player.volume());
 				} else if(newWords == "increase volume" || newWords == "louder") {
 					R.player.volume(currentVol + 0.25);
 					console.log("currentVol: " + currentVol);
@@ -128,28 +138,33 @@ $(document).ready(function(){
 					console.log("new shuffle: " + R.player.shuffle());
 				}
 			} else {
-				if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
+				if(cIT == "start") {
+					startSB();
+				} else if(cIT == "pause" || cIT == "paws" || cIT == "POS" || cIT == "stop" || cIT == "top") {
 					R.player.pause();
 				} else if(cIT == "play" || cIT == "continue") {
 					R.player.play();
 				} else if(cIT == "next") {
-					R.player.next(true);
-				} else if(cIT == "previous" || cIT == "Prius" || cIT == "previews") {
+					R.player.next();
+				} else if(cIT == "next playlist" || cIT == "NEX playlist" || cIT == "X playlist" || cIT == "explicit" || cIT == "explain list") {
+					playNextPlaylist();
+					console.log("name: " + currPlaylist.name + " index: " + currPlaylistIndex);
+				} else if(cIT == "previous" || cIT == "Prius" || cIT == "previews" || cIT == "back") {
 					R.player.previous();
-				} else if(cIT == "decrease volume" || cIT == "decrees volume" || cIT == "degrees volume" || cIT == "softer" || cIT == "quieter") {
+				} else if(cIT == "decrease volume" || cIT == "decrees volume" || cIT == "degrees volume" || cIT == "lower volume" || cIT == "softer" || cIT == "quieter") {
 					R.player.volume(currentVol - 0.25);
 					console.log("currentVol: " + currentVol);
 					currentVol = currentVol - 0.25;
 					console.log("new volume (dec): " + R.player.volume());
-				} else if((cIT == "mute" || cIT == "nude") && unmuteVol > 0.0) {
-					console.log("mute before: " + unmuteVol);
+				} else if((cIT == "mute" || cIT == "nude") && currentVol > 0.0) {
+					console.log("mute before: " + R.player.volume());
 					unmuteVol = R.player.volume();
 					R.player.volume(0.0);
-					console.log("mute after: " + unmuteVol);
-				} else if((cIT == "un mute" || cIT == "unmute" || cIT == "onion") && currentVol == 0.0) {
-					console.log("mute before: " + unmuteVol);
+					console.log("mute after: " + R.player.volume());
+				} else if((cIT == "un mute" || cIT == "unmute" || cIT == "onion") && currentVol == 0.0 && unmuteVol != 3.14159) {
+					console.log("mute before: " + R.player.volume());
 					R.player.volume(unmuteVol);
-					console.log("mute after: " + unmuteVol);
+					console.log("mute after: " + R.player.volume());
 				} else if(cIT == "increase volume" || cIT == "louder") {
 					R.player.volume(currentVol + 0.25);
 					console.log("currentVol: " + currentVol);
@@ -201,13 +216,30 @@ $(document).ready(function(){
 				content: {},
 				success: function(response) {
 					console.log(response);
-					var ownedPlaylists = response.result.owned;
-					for(var i = 0; i < ownedPlaylists.length; i++) {
-						var currentPlaylist = ownedPlaylists[i];
+					var allPlaylists = new Array();
+					var index = 0;
+					response.result.owned.forEach(function(elm) {
+						allPlaylists[index] = elm;
+						index++;
+					});
+					response.result.collab.forEach(function(elm) {
+						allPlaylists[index] = elm;
+						index++;
+					});
+					response.result.subscribed.forEach(function(elm) {
+						allPlaylists[index] = elm;
+						index++;
+					});
+
+					playlists = allPlaylists;
+
+					for(var i = 0; i < allPlaylists.length; i++) {
+						var currentPlaylist = allPlaylists[i];
 						var name = currentPlaylist.name;
 						var key = currentPlaylist.key;
 						var li = "<li class='playlist' data-key='"
-							+ key + "'>"
+							+ key +  "' data-index='"
+							+ i + "'>"
 							+ (i + 1) + ". " +  name + "</li>";
 						console.log(li);
 						$("#playlists").append(li);
@@ -224,6 +256,8 @@ $(document).ready(function(){
 	function createClickTogglers() {
 		$("li").on('click', function(e) {
 			e.preventDefault();
+			currPlaylistIndex = $(this).attr("data-index");
+			currPlaylist = playlists[currPlaylistIndex];
 			var key = $(this).attr("data-key");
 			console.log("Playing playlist: " + key);
 			if(!(recognizing)) {
@@ -255,5 +289,20 @@ $(document).ready(function(){
 		$(identifier).fadeOut('fast', function() {
 			this.remove();
 		})
+	}
+
+	function startSB() {
+		var defaultPL = playlists[0];
+		var key = defaultPL.key;
+		console.log("Playing playlist: " + key);
+		R.player.play({source: key});
+	}
+
+	function playNextPlaylist() {
+		currPlaylistIndex = (currPlaylistIndex + 1) % playlists.length;
+		currPlaylist = playlists[currPlaylistIndex];
+		var key = currPlaylist.key;
+		console.log("Playing playlist: " + key);
+		R.player.play({source: key});
 	}
 });
