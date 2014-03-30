@@ -41,6 +41,10 @@ h1 {
 	font-size: 1em;
 }
 
+button:focus {
+	outline:0;
+}
+
 #authorize {
 	margin-top: 40px;
 	width: 180px;

@@ -1,10 +1,21 @@
 $(document).ready(function(){
+	R.ready(function(){
+		if(R.authenticated()) {
+			authenticationComplete();
+		} else {
+			notAuthenticated();
+		}
+	});
+
 	$("#authorize").click(function(){
-		R.authenticate(function(authenticated){
-			if(authenticated) {
-				console.log("User authenticated");
-				authenticationComplete();
-			}
+		R.authenticate({
+			complete: function(authenticated){
+				if(authenticated) {
+					console.log("User authenticated");
+					authenticationComplete();
+				}
+			},
+			mode: 'redirect'
 		})
 	});
 
@@ -56,7 +67,7 @@ $(document).ready(function(){
 			console.log("final: " + finalTranscript);
 
 			var cIT = currentInterimTranscript.trim();
-			if(cIT == "pause" || cIT == "stop" || cIT == "paws") {
+			if(cIT == "pause" || cIT == "stop" || cIT == "paws" || cIT == "top") {
 				R.player.pause();
 			}
 
