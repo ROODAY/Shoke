@@ -9,17 +9,21 @@
         <link rel="shortcut icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="http://meyerweb.com/eric/tools/css/reset/reset.css">
+		<link rel="stylesheet" href="css/sweet-alert.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="js/spotifyapi.js"></script>
+		<script src="js/sweet-alert.min.js"></script>
 		<script src="js/main.js"></script>
 	</head>
 	<body>
 		<div id="container">
-			<div id="loginItems" style="display: none">
+			<div id="loginItems">
 				<img id="logo" src="assets/images/logo.png">
-				<h1>Shower Buddy</h1>
-				<p class="version">v 1.1.0</p>
+				<h1>Showerify</h1>
+				<p class="version">v 0.0.1</p>
+				<input type="text" id="username" placeholder="  Username">
 				<button id="authorize">Login</button>
 			</div>
 

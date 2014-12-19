@@ -1,22 +1,34 @@
 $(document).ready(function(){
-	R.ready(function(){
-		if(R.authenticated()) {
-			authenticationComplete();
-		} else {
-			notAuthenticated();
+	var spotifyApi = new SpotifyWebApi();
+	spotifyApi.setAccessToken("80e6fc97443c47d1b4a7d16c3c646af8");
+	var username;
+	var playlists;
+
+	$.get(
+		"https://accounts.spotify.com/authorize",
+		{
+			client_id: "80e6fc97443c47d1b4a7d16c3c646af8",
+			response_type: "code",
+			redirect_uri: "http://rooday.com/showerify",
+			scope: "playlist-read-private"
+		},
+		function(data) {
+			console.log(data)
 		}
-	});
+	)
 
 	$("#authorize").click(function(){
-		R.authenticate({
-			complete: function(authenticated){
-				if(authenticated) {
-					console.log("User authenticated");
-					authenticationComplete();
-				}
-			},
-			mode: 'redirect'
-		})
+		if ($("#username").val() !== "") {
+			username = $("#username").val();
+			fadeOutAndRemove('#loginItems');
+			setTimeout(function(){
+				$("#microphoneAccess").fadeIn('fast');
+			}, 250);
+			playlists = spotifyApi.getUserPlaylists(username);
+			console.log(playlists);
+		} else {
+			sweetAlert("Oops...", "You didn't enter your username!", "error");
+		}	
 	});
 
 	/////// RECOGNITION LOGIC ///////
@@ -28,7 +40,7 @@ $(document).ready(function(){
 	
 	/////// GLOBAL VARIABLES ///////
 	var unmuteVol = 3.14159;
-	var playlists = new Array();
+	//var playlists = new Array();
 	var currPlaylist = "";
 	var currPlaylistIndex = "";
 
