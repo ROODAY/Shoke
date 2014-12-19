@@ -1,4 +1,4 @@
-ShowerBuddy
+Showerify
 ===========
 
-Voice-controlled rdio music while you shower.
+Voice-controlled spotify music while you shower.
