@@ -2,12 +2,12 @@
 
 @font-face {
   font-family: 'Whitney Medium SC';
-  src: url('/assets/fonts/WhitneyHTF-MediumSC/WhitneyHTF-MediumSC.eot?') format('eot'), url('/assets/fonts/WhitneyHTF-MediumSC/WhitneyHTF-MediumSC.woff') format('woff'), url('/assets/fonts/WhitneyHTF-MediumSC/WhitneyHTF-MediumSC.ttf') format('truetype');
+  src: url('../assets/fonts/WhitneyHTF-MediumSC/WhitneyHTF-MediumSC.eot?') format('eot'), url('../assets/fonts/WhitneyHTF-MediumSC/WhitneyHTF-MediumSC.woff') format('woff'), url('../assets/fonts/WhitneyHTF-MediumSC/WhitneyHTF-MediumSC.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Whitney Light';
-  src: url('/assets/fonts/WhitneyHTF-Light/WhitneyHTF-Light.eot?') format('eot'), url('/assets/fonts/WhitneyHTF-Light/WhitneyHTF-Light.woff') format('woff'), url('/assets/fonts/WhitneyHTF-Light/WhitneyHTF-Light.ttf') format('truetype');
+  src: url('../assets/fonts/WhitneyHTF-Light/WhitneyHTF-Light.eot?') format('eot'), url('../assets/fonts/WhitneyHTF-Light/WhitneyHTF-Light.woff') format('woff'), url('../assets/fonts/WhitneyHTF-Light/WhitneyHTF-Light.ttf') format('truetype');
 }
 
 body {
