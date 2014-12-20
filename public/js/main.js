@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	console.log(playlists);
 	/////// RECOGNITION LOGIC ///////
 
 	var currentInterimTranscript = '';

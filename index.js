@@ -63,8 +63,7 @@ app.get('/', function(req, res){
     spotifyApi.setAccessToken(userTokens[req.user.id]);
     spotifyApi.getUserPlaylists(req.user.id)
     .then(function(data) {
-      console.log('Retrieved playlists', data);
-      res.render('index.html', { user: req.user, playlists: data });
+      res.render('index.html', { user: req.user, playlists: JSON.stringify(data) });
     },function(err) {
       console.log('Something went wrong!', err);
     });
