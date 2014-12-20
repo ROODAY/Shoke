@@ -46,8 +46,6 @@ passport.use(new SpotifyStrategy({
   }));
 
 var app = express();
-var http = require('http').Server(app);
-var io = require("socket.io")(http);
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -86,10 +84,6 @@ app.get('/callback',
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
-});
-
-io.on('connection', function(socket){
-    
 });
 
 app.listen((process.env.PORT || 3000), function(){
