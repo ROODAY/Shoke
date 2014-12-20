@@ -12,6 +12,13 @@ var consolidate = require('consolidate');
 var appKey = "80e6fc97443c47d1b4a7d16c3c646af8";
 var appSecret = "87b441e927b241289a6de7c1101b0467";
 
+var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyApi = new SpotifyWebApi({
+  clientId : '80e6fc97443c47d1b4a7d16c3c646af8',
+  clientSecret : '87b441e927b241289a6de7c1101b0467',
+  redirectUri : 'https://showerify.herokuapp.com//callback'
+});
+
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
@@ -23,15 +30,24 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new SpotifyStrategy({
   clientID: appKey,
   clientSecret: appSecret,
-  callbackURL: 'http://localhost:3000/callback'
+  callbackURL: 'https://showerify.herokuapp.com//callback'
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      return done(null, profile);
+      spotifyApi.setAccessToken(accessToken);
+      spotifyApi.getUserPlaylists(profile.id)
+      .then(function(data) {
+        //console.log('Retrieved playlists', data);
+        return done(null, profile, data);
+      },function(err) {
+        console.log('Something went wrong!', err);
+      });
     });
   }));
 
 var app = express();
+var http = require('http').Server(app);
+var io = require("socket.io")(http);
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -49,6 +65,7 @@ app.engine('html', consolidate.swig);
 
 app.get('/', function(req, res){
   res.render('index.html', { user: req.user });
+  console.log('Retrieved playlists', req);
 });
 
 app.get('/login', function(req, res){
@@ -69,6 +86,10 @@ app.get('/callback',
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
+});
+
+io.on('connection', function(socket){
+    
 });
 
 app.listen((process.env.PORT || 3000), function(){

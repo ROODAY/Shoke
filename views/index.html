@@ -9,9 +9,18 @@
 		<input type="submit" value="Login" id="authorize">
 	</form>
 {% else %}
-	<h2>Let's karaoke, {{ user.username }}. <br> Pick a playlist for your shower.</h2>
-	<!-- <button id="playPause" class="play"></button> -->
-	<p id="command"></p>
-	<ul id="playlists"></ul>
+	<div id="microphoneAccess">
+		<h2>Showerify needs to access your microphone to listen to your commands while you shower.</h2>
+		<button id="microphoneButton">Allow Microphone Access</button>
+	</div>
+
+	<div id="playItems" style="display: none">
+		<h2>Let's karaoke, {{ user.name }}. <br> Pick a playlist for your shower.</h2>
+		<!-- <button id="playPause" class="play"></button> -->
+		<p id="command"></p>
+		<ul id="playlists"></ul>
+	</div>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/js/main.js"></script>
 {% endif %}
 {% endblock %}

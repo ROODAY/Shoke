@@ -1,9 +1,4 @@
-var socket = io();
-
 $(document).ready(function(){
-	var username;
-	var playlists;
-
 	/////// RECOGNITION LOGIC ///////
 
 	var currentInterimTranscript = '';
@@ -13,7 +8,7 @@ $(document).ready(function(){
 	
 	/////// GLOBAL VARIABLES ///////
 	var unmuteVol = 3.14159;
-	//var playlists = new Array();
+	var playlists = new Array();
 	var currPlaylist = "";
 	var currPlaylistIndex = "";
 
