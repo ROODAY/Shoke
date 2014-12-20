@@ -16,6 +16,7 @@ body {
 
 	font-family: 'Whitney Light', 'HelveticaNeue-Light', Helvetica, 'Lucida Grande', Arial, sans-serif;
 	font-weight: 300;
+	background-color: #333;
 }
 
 #container {
@@ -28,19 +29,19 @@ body {
 #logo {
 	height: 150px;
 	margin-top: 50px;
-	margin-left: 30px;
 }
 
 h1 {
 	font-size: 2em;
 	margin-top: 20px;
-	color: #0285D2;
+	color: #81b71a;
 }
 
 .version {
 	color: #8297AF;
 	margin-top: 5px;
 	font-size: 1em;
+	text-decoration: none;
 }
 
 button, button:focus, input, input:focus {
@@ -51,14 +52,14 @@ button, button:focus, input, input:focus {
 	margin-top: 10px;
 	width: 180px;
 	height: 40px;
-	border: 2px solid rgba(2, 144, 214, 0.8);
+	border: 2px solid rgba(129,183,26, 0.8);
 	border-radius: 8px;
 	background-color: transparent;
 
 	font-family: 'Whitney Medium SC';
 	text-transform: uppercase;
 	font-size: 1em;
-	color: #0285D2;
+	color: #81b71a;
 
 	transition: 0.25s;
 }
@@ -74,9 +75,9 @@ button, button:focus, input, input:focus {
 }
 
 #authorize:hover, #microphoneButton:hover {
-	border: 2px solid rgb(2, 144, 214);
+	border: 2px solid rgb(129,183,26);
 	cursor: pointer;
-	background-color: #0285D2;
+	background-color: #81b71a;
 	color: #FFFFFF;
 }
 
@@ -85,7 +86,7 @@ h2 {
 	width: 80%;
 	margin: auto;
 	margin-top: 20px;
-	color: #0285D2;
+	color: #81b71a;
 }
 
 #playPause {

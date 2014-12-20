@@ -2,10 +2,16 @@
 
 {% block content %}
 {% if !user %}
-	<h2>Welcome! Please log in.</h2>
-	<p><a href="/login">login</a></p>
+	<img id="logo" src="/assets/images/logo.png">
+	<h1>Showerify</h1>
+	<p class="version">v 0.0.1</p>
+	<form action="/auth/spotify">
+		<input type="submit" value="Login" id="authorize">
+	</form>
 {% else %}
-	<h2>Hello, {{ user.username }}.</h2>
-	<p>Your email is {{ user.emails[0].value }}</p>
+	<h2>Let's karaoke, {{ user.username }}. <br> Pick a playlist for your shower.</h2>
+	<!-- <button id="playPause" class="play"></button> -->
+	<p id="command"></p>
+	<ul id="playlists"></ul>
 {% endif %}
 {% endblock %}

@@ -14,15 +14,9 @@
 	<body>
 		<div id="container">
 			{% if !user %}
-				<p>
-				<a href="/">Home</a> |
-				<a href="/login">Log In</a>
-				</p>
 			{% else %}
 				<p>
-				<a href="/">Home</a> |
-				<a href="/account">Account</a> |
-				<a href="/logout">Log Out</a>
+				<a href="/logout" class="version">Log Out</a>
 				</p>
 			{% endif %}
 			{% block content %}
