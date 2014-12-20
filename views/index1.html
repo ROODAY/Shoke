@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Showerify</title>
+		<meta name="description" content="Voice-controlled spotify music while you shower.">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <link rel="shortcut icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="http://meyerweb.com/eric/tools/css/reset/reset.css">
+		<link rel="stylesheet" href="css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="js/sweet-alert.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="js/main.js"></script>
+	</head>
+	<body>
+		<div id="container">
+			<div id="loginItems">
+				<img id="logo" src="assets/images/logo.png">
+				<h1>Showerify</h1>
+				<p class="version">v 0.0.1</p>
+				<input type="text" id="username" placeholder="  Username">
+				<button id="authorize">Login</button>
+			</div>
+
+			<div id="microphoneAccess" style="display: none">
+				<h2>ShowerBuddy needs to access your microphone to listen to your commands while you shower.</h2>
+				<button id="microphoneButton">Allow Microphone Access</button>
+			</div>
+
+			<div id="playItems" style="display: none">
+				<h2>Let's karaoke. <br> Pick a playlist for your shower.</h2>
+				<!-- <button id="playPause" class="play"></button> -->
+				<p id="command"></p>
+				<ul id="playlists"></ul>
+			</div>
+		</div>
+	</body>
+</html>

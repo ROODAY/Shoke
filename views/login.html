@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<img id="logo" src="/assets/images/logo.png">
+<h1>Showerify</h1>
+<p class="version">v 0.0.1</p>
+<form action="/auth/spotify">
+	<input type="submit" value="Login" id="authorize">
+</form>
+{% endblock %}

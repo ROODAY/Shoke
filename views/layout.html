@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Showerify</title>
+		<meta name="description" content="Voice-controlled spotify music while you shower.">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <link rel="shortcut icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="http://meyerweb.com/eric/tools/css/reset/reset.css">
+		<link rel="stylesheet" href="/css/sweet-alert.css">
+		<link rel="stylesheet" href="/css/main.css">
+	</head>
+	<body>
+		<div id="container">
+			{% if !user %}
+				<p>
+				<a href="/">Home</a> |
+				<a href="/login">Log In</a>
+				</p>
+			{% else %}
+				<p>
+				<a href="/">Home</a> |
+				<a href="/account">Account</a> |
+				<a href="/logout">Log Out</a>
+				</p>
+			{% endif %}
+			{% block content %}
+		</div>
+	</body>
+</html>
