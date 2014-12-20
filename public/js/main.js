@@ -167,21 +167,12 @@ $(document).ready(function(){
 	}
 
 	///// FUNCTIONS //////
-
-	function authenticationComplete() {
-		R.ready(function() {
-			//Hide and remove current elements
-			fadeOutAndRemove('#loginItems');
-			$("#microphoneAccess").fadeIn('fast');
-		});
-	}
-
-	function notAuthenticated() {
-		$("#loginItems").fadeIn('fast');
-	}
-
 	$("#microphoneButton").click(function() {
 		startRecording();
+		fadeOutAndRemove('#microphoneAccess');
+		setTimeout(function(){
+			$("#playItems").fadeIn('fast');
+		}, 250);
 	})
 
 	function enterPlayMode() {

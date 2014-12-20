@@ -5,6 +5,7 @@ var express = require('express'),
     session = require('express-session'),
     passport = require('passport'),
     swig = require('swig'),
+    util = require('util'),
     SpotifyStrategy = require('passport-spotify').Strategy;
 
 var consolidate = require('consolidate');
@@ -16,7 +17,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyApi = new SpotifyWebApi({
   clientId : '80e6fc97443c47d1b4a7d16c3c646af8',
   clientSecret : '87b441e927b241289a6de7c1101b0467',
-  redirectUri : 'https://showerify.herokuapp.com/callback'
+  redirectUri : 'http://localhost:3000/callback'
 });
 
 passport.serializeUser(function(user, done) {
@@ -27,21 +28,17 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
+var userTokens = {};
+
 passport.use(new SpotifyStrategy({
   clientID: appKey,
   clientSecret: appSecret,
-  callbackURL: 'https://showerify.herokuapp.com/callback'
+  callbackURL: 'http://localhost:3000/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      spotifyApi.setAccessToken(accessToken);
-      spotifyApi.getUserPlaylists(profile.id)
-      .then(function(data) {
-        //console.log('Retrieved playlists', data);
-        return done(null, profile, data);
-      },function(err) {
-        console.log('Something went wrong!', err);
-      });
+      userTokens[profile.id] = accessToken;
+      return done(null, profile);
     });
   }));
 
@@ -62,12 +59,26 @@ app.use(express.static(__dirname + '/public'));
 app.engine('html', consolidate.swig);
 
 app.get('/', function(req, res){
-  res.render('index.html', { user: req.user });
-  console.log('Retrieved playlists', req);
+  if (req.user) {
+    spotifyApi.setAccessToken(userTokens[req.user.id]);
+    spotifyApi.getUserPlaylists(req.user.id)
+    .then(function(data) {
+      console.log('Retrieved playlists', data);
+      res.render('index.html', { user: req.user, playlists: data });
+    },function(err) {
+      console.log('Something went wrong!', err);
+    });
+  } else {
+    res.render('index.html', { user: req.user });
+  }
 });
 
 app.get('/login', function(req, res){
   res.render('login.html', { user: req.user });
+});
+
+app.get('/about', function(req, res){
+  res.render('about.html');
 });
 
 app.get('/auth/spotify',

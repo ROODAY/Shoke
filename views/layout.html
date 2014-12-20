@@ -14,8 +14,15 @@
 	<body>
 		<div id="container">
 			{% if !user %}
+				<p>
+				<a href="/" class="version">Home</a> <span class="version">|</span> 
+				<a href="/about" class="version">About</a> <span class="version">|</span> 
+				<a href="/logout" class="version">Log Out</a>
+				</p>
 			{% else %}
 				<p>
+				<a href="/" class="version">Home</a> <span class="version">|</span> 
+				<a href="/about" class="version">About</a> <span class="version">|</span> 
 				<a href="/logout" class="version">Log Out</a>
 				</p>
 			{% endif %}
