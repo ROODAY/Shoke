@@ -133,6 +133,7 @@ h2 {
 	border-bottom: 1px solid #8297AF;
 	cursor: pointer;
 	padding: 10px 10px;
+	transition: 0.25s;
 }
 
 .playlistImage {
@@ -146,10 +147,16 @@ h2 {
 	vertical-align: top;
 	margin-left: 10px;
 	margin-top: 3px;
+	color: #81b71a;
+	transition: 0.25s;
 }
 
 #playlists > li:hover {
-	background-color: rgb(245, 248, 250);
+	background-color: #81b71a;
+}
+
+#playlists > li:hover > .playlistName {
+	color: white;
 }
 
 p {
