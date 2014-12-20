@@ -16,7 +16,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyApi = new SpotifyWebApi({
   clientId : '80e6fc97443c47d1b4a7d16c3c646af8',
   clientSecret : '87b441e927b241289a6de7c1101b0467',
-  redirectUri : 'https://showerify.herokuapp.com//callback'
+  redirectUri : 'https://showerify.herokuapp.com/callback'
 });
 
 passport.serializeUser(function(user, done) {
@@ -30,7 +30,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new SpotifyStrategy({
   clientID: appKey,
   clientSecret: appSecret,
-  callbackURL: 'https://showerify.herokuapp.com//callback'
+  callbackURL: 'https://showerify.herokuapp.com/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
