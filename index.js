@@ -1,12 +1,12 @@
 var express = require('express'),
-    bodyParser = require('body-parser'),
-    cookieParser = require('cookie-parser'),
-    methodOverride = require('method-override'),
-    session = require('express-session'),
-    passport = require('passport'),
-    swig = require('swig'),
-    util = require('util'),
-    SpotifyStrategy = require('passport-spotify').Strategy;
+	bodyParser = require('body-parser'),
+	cookieParser = require('cookie-parser'),
+	methodOverride = require('method-override'),
+	session = require('express-session'),
+	passport = require('passport'),
+	swig = require('swig'),
+	util = require('util'),
+	SpotifyStrategy = require('passport-spotify').Strategy;
 
 var consolidate = require('consolidate');
 
@@ -36,10 +36,10 @@ passport.use(new SpotifyStrategy({
   callbackURL: 'https://showerify.herokuapp.com/callback'
   },
   function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      userTokens[profile.id] = accessToken;
-      return done(null, profile);
-    });
+	process.nextTick(function () {
+	  userTokens[profile.id] = accessToken;
+	  return done(null, profile);
+	});
   }));
 
 var app = express();
@@ -60,15 +60,22 @@ app.engine('html', consolidate.swig);
 
 app.get('/', function(req, res){
   if (req.user) {
-    spotifyApi.setAccessToken(userTokens[req.user.id]);
-    spotifyApi.getUserPlaylists(req.user.id)
-    .then(function(data) {
-      res.render('index.html', { user: req.user, playlists: JSON.stringify(data) });
-    },function(err) {
-      console.log('Something went wrong!', err);
-    });
+	spotifyApi.setAccessToken(userTokens[req.user.id]);
+	spotifyApi.getUserPlaylists(req.user.id)
+	.then(function(data) {
+	  spotifyApi.getPlaylist(req.user.id, data[0].id)
+	  .then(function(playlistdata) {
+	  	console.log(playlistdata)
+		res.render('index.html', { user: req.user, playlists: JSON.stringify(data), specificplaylist: JSON.stringify(playlistdata) });
+	  },function(err) {
+		console.log('Something went wrong!', err);
+	  });
+	  
+	},function(err) {
+	  console.log('Something went wrong!', err);
+	});
   } else {
-    res.render('index.html', { user: req.user });
+	res.render('index.html', { user: req.user });
   }
 });
 
@@ -88,7 +95,7 @@ app.get('/auth/spotify',
 app.get('/callback',
   passport.authenticate('spotify', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+	res.redirect('/');
   });
 
 app.get('/logout', function(req, res){

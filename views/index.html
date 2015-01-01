@@ -24,7 +24,8 @@
 	<script>
 		{% autoescape false %}
 		var data = JSON.parse('{{ playlists }}');
-		console.log(data);
+		var specificdata = JSON.parse('{{ specificplaylist }}');
+		console.log(specificdata);
 		data.items.forEach(function(playlist){
 			$("#playlists").append("<li class='playlist' data-id='" + playlist.id + "'><img class='playlistImage' src='/assets/images/Play.png'><span class='playlistName'>" + playlist.name + "</span></li>")
 		});
