@@ -17,7 +17,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyApi = new SpotifyWebApi({
   clientId : '80e6fc97443c47d1b4a7d16c3c646af8',
   clientSecret : '87b441e927b241289a6de7c1101b0467',
-  redirectUri : 'https://showerify.herokuapp.com/callback'
+  redirectUri : 'http://localhost:3000/callback'
 });
 
 passport.serializeUser(function(user, done) {
@@ -33,7 +33,7 @@ var userTokens = {};
 passport.use(new SpotifyStrategy({
   clientID: appKey,
   clientSecret: appSecret,
-  callbackURL: 'https://showerify.herokuapp.com/callback'
+  callbackURL: 'http://localhost:3000/callback'
   },
   function(accessToken, refreshToken, profile, done) {
 	process.nextTick(function () {
@@ -63,16 +63,17 @@ app.get('/', function(req, res){
 	spotifyApi.setAccessToken(userTokens[req.user.id]);
 	spotifyApi.getUserPlaylists(req.user.id)
 	.then(function(data) {
+		console.log("attempting to find data on playlist with id: " + data[0].id)
 	  spotifyApi.getPlaylist(req.user.id, data[0].id)
 	  .then(function(playlistdata) {
-	  	console.log(playlistdata)
+	  	console.log("specific data recieved: " + playlistdata)
 		res.render('index.html', { user: req.user, playlists: JSON.stringify(data), specificplaylist: JSON.stringify(playlistdata) });
 	  },function(err) {
-		console.log('Something went wrong!', err);
+		console.error('Something went wrong!', err);
 	  });
 	  
 	},function(err) {
-	  console.log('Something went wrong!', err);
+	  console.error('Something went wrong!', err);
 	});
   } else {
 	res.render('index.html', { user: req.user });
