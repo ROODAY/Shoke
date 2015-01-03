@@ -23,7 +23,7 @@ var userTokens = {};
 passport.use(new SpotifyStrategy({
   clientID: appKey,
   clientSecret: appSecret,
-  callbackURL: 'http://localhost:3000/callback'
+  callbackURL: 'https://showerify.herokuapp.com/callback'
   },
   function(accessToken, refreshToken, profile, done) {
 	process.nextTick(function () {
