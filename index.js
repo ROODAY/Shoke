@@ -9,27 +9,17 @@ var express = require('express'),
 	SpotifyStrategy = require('passport-spotify').Strategy;
 
 var consolidate = require('consolidate');
-
 var appKey = "80e6fc97443c47d1b4a7d16c3c646af8";
 var appSecret = "87b441e927b241289a6de7c1101b0467";
-
-var SpotifyWebApi = require('spotify-web-api-node');
-var spotifyApi = new SpotifyWebApi({
-  clientId : '80e6fc97443c47d1b4a7d16c3c646af8',
-  clientSecret : '87b441e927b241289a6de7c1101b0467',
-  redirectUri : 'http://localhost:3000/callback'
-});
 
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
-
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
 var userTokens = {};
-
 passport.use(new SpotifyStrategy({
   clientID: appKey,
   clientSecret: appSecret,
@@ -43,38 +33,20 @@ passport.use(new SpotifyStrategy({
   }));
 
 var app = express();
-
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(methodOverride());
 app.use(session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(express.static(__dirname + '/public'));
-
 app.engine('html', consolidate.swig);
 
 app.get('/', function(req, res){
   if (req.user) {
-	spotifyApi.setAccessToken(userTokens[req.user.id]);
-	spotifyApi.getUserPlaylists(req.user.id)
-	.then(function(data) {
-		console.log("attempting to find data on playlist with id: " + data[0].id)
-	  spotifyApi.getPlaylist(req.user.id, data[0].id)
-	  .then(function(playlistdata) {
-	  	console.log("specific data recieved: " + playlistdata)
-		res.render('index.html', { user: req.user, playlists: JSON.stringify(data), specificplaylist: JSON.stringify(playlistdata) });
-	  },function(err) {
-		console.error('Something went wrong!', err);
-	  });
-	  
-	},function(err) {
-	  console.error('Something went wrong!', err);
-	});
+	res.render('index.html', { user: req.user, accessToken: userTokens[req.user.id] });
   } else {
 	res.render('index.html', { user: req.user });
   }
