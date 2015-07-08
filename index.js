@@ -9,8 +9,8 @@ var express = require('express'),
 	SpotifyStrategy = require('passport-spotify').Strategy;
 
 var consolidate = require('consolidate');
-var appKey = "80e6fc97443c47d1b4a7d16c3c646af8";
-var appSecret = "87b441e927b241289a6de7c1101b0467";
+var appKey = process.env.APP_KEY;
+var appSecret = process.env.APP_SECRET;
 
 passport.serializeUser(function(user, done) {
   done(null, user);
