@@ -1,16 +1,16 @@
 {
-  "name": "showerify",
+  "name": "shoke",
   "version": "0.0.1",
-  "description": "Voice Control your music while you shower.",
+  "description": "Voice-control your Google Play music while you shower.",
   "scripts": {
     "start": "node index.js"
   },
   "author": "ROODAY",
   "license": "MIT",
-  "homepage": "https://github.com/ROODAY/GPMDPU-Lyrics-Finder",
+  "homepage": "https://shoke.herokuapp.com/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ROODAY/GPMDPU-Lyrics-Finder.git"
+    "url": "git+https://github.com/ROODAY/Shoke.git"
   },
   "dependencies": {
     "express": "^4.13.4",

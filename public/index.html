@@ -166,7 +166,7 @@
 		});
 
 		$("#submit").click(function(){
-			if (document.getElementById("email").checkValidity() && $("#password").val() !== "") {
+			if (document.getElementById("email").checkValidity() && $("#password").val() !== "" && $("#email").val() !== "") {
 				socket.emit("authenticate", $("#email").val(), $("#password").val());
 				statusElement.html("Logging into Google Play Music...");
 				progressBarElement.css("width", "0%");
