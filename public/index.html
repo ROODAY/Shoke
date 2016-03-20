@@ -1,28 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Music</title>
+	<title>Shoke</title>
+	<meta name="description" content="Voice-controlled google play music while you shower. A shower karaoke!">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-material-design.min.css">
 	<link rel="stylesheet" href="css/ripples.min.css">
 </head>
 <body>
-	<h1>Music</h1>
-	<span id="status"></span>
-	<input type="text" id="email" placeholder="email">
-	<input type="text" id="password" placeholder="password">
-	<button id="submit">Submit!</button> <br>
-	
-	<h1>Playlists</h1>
-	<ul class="list-group" id="playlists">
-	</ul>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="bs-component">
+	          <div class="navbar navbar-warning">
+	            <div class="container-fluid">
+	              <div class="navbar-header">
+	                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-warning-collapse">
+	                  <span class="icon-bar"></span>
+	                  <span class="icon-bar"></span>
+	                  <span class="icon-bar"></span>
+	                </button>
+	                <a class="navbar-brand" href="javascript:void(0)">Shoke</a>
+	              </div>
+	            </div>
+	          </div>
+	        <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="container" id="loading-container">
+			<span id="status"></span>
+			<div class="progress">
+              <div class="progress-bar" style="width: 10%;"></div>
+            </div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="container">
+			<form class="form-horizontal">
+				<fieldset>
+					<legend>Login</legend>
+					<div class="form-group label-floating is-empty">
+						<label for="email" class="control-label">Email</label>
+						<input type="email" class="form-control" id="email" data-cip-id="email">
+						<span class="help-block">Please enter your full email, including the "@gmail.com"</span>
+						<span class="material-input"></span>
+				    </div>
+				    <div class="form-group label-floating is-empty">
+						<label for="password" class="control-label">Password</label>
+						<input type="password" class="form-control" id="password" data-cip-id="password">
+						<span class="help-block">If you use 2-factor authentication, you must use an app password here.</span>
+						<span class="material-input"></span>
+				    </div>
+				    <div class="form-group">
+				    	<button id="submit" class="btn btn-raised btn-default">
+							Submit!
+							<div class="ripple-container"></div>
+						</button>
+				    </div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="container" id="playlists-container">
+			<h1>Playlists</h1>
+		<ul class="list-group" id="playlists"></ul>
+		</div>
+	</div>						
 
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/material.min.js"></script>
 	<script src="js/ripples.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="js/voice.js"></script>
 	<script>
 		$.material.init()
 		var socket = io();
