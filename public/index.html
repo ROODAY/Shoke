@@ -11,6 +11,36 @@
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-material-design.min.css">
 	<link rel="stylesheet" href="css/ripples.min.css">
+	<link rel="stylesheet" href="css/sweetalert.css">
+	<style>
+		#playlists-container {
+			display: none;
+		}
+		.well {
+			margin-top: 1px !important;
+			margin-bottom: 1px !important;
+		}
+		.list-group {
+			font-size: 30px;
+		}
+		.list-group-item {
+			cursor: pointer;
+		}
+		li.list-group-item.well {
+		    background: #fff;
+		    color: #333;
+		    -webkit-transition: color 0.5s, background 0.5s;
+		    -moz-transition: color 0.5s, background 0.5s;
+		    transition: color 0.5s, background 0.5s;
+		}
+		li.list-group-item.well:hover {
+		    background: #ff5722;
+		    color: rgba(255,255,255,.84);
+		}
+		.navbar-brand {
+		    font-size: 45px;
+		}
+	</style>
 </head>
 <body>
 	<div class="row">
@@ -33,36 +63,43 @@
 	</div>
 	<div class="row">
 		<div class="container" id="loading-container">
-			<span id="status"></span>
+			<span id="status">Initializing Player...</span>
 			<div class="progress">
-              <div class="progress-bar" style="width: 10%;"></div>
+              <div class="progress-bar" style="width: 0%;"></div>
             </div>
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row" id="authentication-row">
 		<div class="container">
-			<form class="form-horizontal">
+			<form class="form-horizontal well page">
 				<fieldset>
-					<legend>Login</legend>
-					<div class="form-group label-floating is-empty">
-						<label for="email" class="control-label">Email</label>
-						<input type="email" class="form-control" id="email" data-cip-id="email">
-						<span class="help-block">Please enter your full email, including the "@gmail.com"</span>
-						<span class="material-input"></span>
-				    </div>
-				    <div class="form-group label-floating is-empty">
-						<label for="password" class="control-label">Password</label>
-						<input type="password" class="form-control" id="password" data-cip-id="password">
-						<span class="help-block">If you use 2-factor authentication, you must use an app password here.</span>
-						<span class="material-input"></span>
-				    </div>
-				    <div class="form-group">
-				    	<button id="submit" class="btn btn-raised btn-default">
-							Submit!
-							<div class="ripple-container"></div>
-						</button>
-				    </div>
+					<legend>Authenticate</legend>
+					<div class="col-md-6">
+						<div class="form-group label-floating is-empty" style="width: 90%">
+							<label for="email" class="control-label">Email</label>
+							<input type="email" class="form-control" id="email" data-cip-id="email">
+							<span class="help-block">Please enter your full email, including the "@gmail.com"</span>
+							<span class="material-input"></span>
+					    </div>
+					    <div class="form-group label-floating is-empty" style="width: 90%">
+							<label for="password" class="control-label">Password</label>
+							<input type="password" class="form-control" id="password" data-cip-id="password">
+							<span class="help-block">If you use 2-factor authentication, you must use an app password here.</span>
+							<span class="material-input"></span>
+					    </div>
+					</div>
+					<div class="col-md-6">
+						<p>
+							I promise your password is not being abused.
+						</p>
+						<div class="form-group">
+					    	<button id="submit" class="btn btn-raised btn-default">
+								Login
+								<div class="ripple-container"></div>
+							</button>
+					    </div>
+					</div>
 				</fieldset>
 			</form>
 		</div>
@@ -79,34 +116,81 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/material.min.js"></script>
 	<script src="js/ripples.min.js"></script>
+	<script src="js/sweetalert.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="js/voice.js"></script>
 	<script>
 		$.material.init()
 		var socket = io();
-
 		var playlists = {};
+		var currentPlaylist;
+		var currentSongIndex;
+		var currentSongLength;
+		var currentSongTitle;
+		var currentSongArtist;
+		var isPlaying = false;
+		var audio;
+
+		var progressBarElement = $(".progress-bar");
+		var statusElement = $("#status");
+
+		function updateSongProgress() {
+			if (isPlaying) {
+				progressBarElement.css("width", (audio.currentTime / currentSongLength) * 100 + "%");
+				var minutes = Math.floor(audio.currentTime / 60);
+				var seconds = Math.round(audio.currentTime - minutes * 60);
+				statusElement.html(currentSongTitle + " by " + currentSongArtist + " | " + minutes + ":" + seconds);
+				setTimeout(updateSongProgress, 1000);
+			}
+		}
+
+		$("form").submit(function(e) {
+		    e.preventDefault();
+		});
 
 		socket.on("log", function(data){
 			console.log(data);
 		});
 
+		socket.on("progressBar", function(val){
+			progressBarElement.css("width", val + "%");
+		});
+
+		socket.on("status", function(text){
+			statusElement.html(text);
+		});
+
 		socket.on("playerReady", function(){
-			$("#status").html("Player is ready!");
+			statusElement.html("Player is ready!");
+			progressBarElement.css("width", "100%");
 		});
 
 		$("#submit").click(function(){
-			socket.emit("authenticate", $("#email").val(), $("#password").val());
+			if (document.getElementById("email").checkValidity() && $("#password").val() !== "") {
+				socket.emit("authenticate", $("#email").val(), $("#password").val());
+				statusElement.html("Logging into Google Play Music...");
+				progressBarElement.css("width", "0%");
+			} else {
+				sweetAlert("Oops...", "Either your email is invalid or you didn't enter a password!", "error");
+			}
 		});
 
 		socket.on("songData", function(playlistsRaw, songsRaw){
+			statusElement.html("Processing Songs...");
+			progressBarElement.css("width", "0%");
+			var playlistCount = playlistsRaw.length;
+			var progress = 0;
 			playlistsRaw.forEach(function(list){
 				var id = list.id;
 				var songs = [];
+				var songCount = songsRaw.length;
+				var increment = Math.round(100/playlistCount/songCount);
 				songsRaw.forEach(function(song){
 					if (song.playlistId === id) {
 						songs.push(song);
+						progressBarElement.css("width", (progress + increment) + "%");
 					}
+
 				});
 				playlists[list.name] = {
 					"data": list,
@@ -114,18 +198,38 @@
 				};
 			});
 			for (var list in playlists) {
-				$("#playlists").append("<li class=\"list-group-item\">" + playlists[list].data.name + "</li>")
+				$("#playlists").append("<li class=\"list-group-item well\">" + playlists[list].data.name + "</li>")
 			}
 			$(".list-group-item").click(function(){
 				var key = $(this).html();
 				var song = playlists[key].songs[0];
+				currentPlaylist = playlists[key];
+				currentSongIndex = 0;
+				console.log(song);
 				socket.emit("getStreamUrl", song.track.storeId);
 			});
+			statusElement.html("Ready!");
+			statusElement.css("font-size", "30px");
+			progressBarElement.css("width", "100%");
+			$("#playlists-container").css("display", "block");
+			$("#authentication-row").fadeOut("normal", function() {
+		        $(this).remove();
+		    });
 		});
 
 		socket.on("playSong", function(url){
-			var audio = new Audio(url);
+			if (audio === undefined) {
+				audio = new Audio(url);
+			} else {
+				audio.pause();
+				audio = new Audio(url);
+			}
 			audio.play();
+			currentSongTitle = currentPlaylist.songs[currentSongIndex].track.title;
+			currentSongArtist = currentPlaylist.songs[currentSongIndex].track.artist;
+			currentSongLength = Math.round(currentPlaylist.songs[currentSongIndex].track.durationMillis / 1000)
+			isPlaying = true;
+			updateSongProgress();
 		});
 	</script>
 </body>
