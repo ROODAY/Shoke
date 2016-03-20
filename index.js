@@ -1,86 +1,43 @@
-var express = require('express'),
-	bodyParser = require('body-parser'),
-	cookieParser = require('cookie-parser'),
-	methodOverride = require('method-override'),
-	session = require('express-session'),
-	passport = require('passport'),
-	swig = require('swig'),
-	util = require('util'),
-	SpotifyStrategy = require('passport-spotify').Strategy;
-
-var consolidate = require('consolidate');
-var appKey = process.env.APP_KEY;
-var appSecret = process.env.APP_SECRET;
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-var userTokens = {};
-passport.use(new SpotifyStrategy({
-  clientID: appKey,
-  clientSecret: appSecret,
-  callbackURL: 'https://showerify.herokuapp.com/callback'
-  },
-  function(accessToken, refreshToken, profile, done) {
-	process.nextTick(function () {
-	  userTokens[profile.id] = accessToken;
-	  return done(null, profile);
-	});
-  }));
-
+var express = require('express');
 var app = express();
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.use(cookieParser());
-app.use(bodyParser());
-app.use(methodOverride());
-app.use(session({ secret: 'keyboard cat' }));
-app.use(passport.initialize());
-app.use(passport.session());
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+var PlayMusic = require('playmusic');
+
+var players = {};
+
 app.use(express.static(__dirname + '/public'));
-app.engine('html', consolidate.swig);
-
-app.get('/', function(req, res){
-  if (req.user) {
-	res.render('index.html', { user: req.user, accessToken: userTokens[req.user.id] });
-  } else {
-	res.render('index.html', { user: req.user });
-  }
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/login', function(req, res){
-  res.render('login.html', { user: req.user });
-});
+io.on("connection", function(socket){
+  console.log("User " + socket.id + " has joined.");
+  var pm = new PlayMusic();
+  players[socket.id] = pm;
+  socket.emit("playerReady");
 
-app.get('/about', function(req, res){
-  res.render('about.html', { user: req.user });
-});
-
-app.get('/auth/spotify',
-  passport.authenticate('spotify', {scope: 'playlist-read-private'}),
-  function(req, res){
-});
-
-app.get('/callback',
-  passport.authenticate('spotify', { failureRedirect: '/login' }),
-  function(req, res) {
-	res.redirect('/');
+  socket.on("authenticate", function(email, password){
+    players[socket.id].init({email: email, password: password}, function(err) {
+      if(err) console.error(err);
+      
+      players[socket.id].getPlayLists(function(err, data) {
+        var playlists = data.data.items;
+        players[socket.id].getPlayListEntries(function(err, data) {
+          var songs = data.data.items;
+          socket.emit("songData", playlists, songs);
+        });
+      });
+    });
   });
 
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
+  socket.on("getStreamUrl", function(songId){
+    players[socket.id].getStreamUrl(songId, function(bool, url) {
+      socket.emit("playSong", url);
+    });
+  });
 });
 
-app.listen((process.env.PORT || 3000), function(){
-  console.log('listening on *:3000');
+http.listen((process.env.PORT || 8000), function() {
+    console.log("Listening for connections on port 8000.");
 });
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login');
-}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Music</title>
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-material-design.min.css">
+	<link rel="stylesheet" href="css/ripples.min.css">
+</head>
+<body>
+	<h1>Music</h1>
+	<span id="status"></span>
+	<input type="text" id="email" placeholder="email">
+	<input type="text" id="password" placeholder="password">
+	<button id="submit">Submit!</button> <br>
+	
+	<h1>Playlists</h1>
+	<ul class="list-group" id="playlists">
+	</ul>
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/material.min.js"></script>
+	<script src="js/ripples.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		$.material.init()
+		var socket = io();
+
+		var playlists = {};
+
+		socket.on("log", function(data){
+			console.log(data);
+		});
+
+		socket.on("playerReady", function(){
+			$("#status").html("Player is ready!");
+		});
+
+		$("#submit").click(function(){
+			socket.emit("authenticate", $("#email").val(), $("#password").val());
+		});
+
+		socket.on("songData", function(playlistsRaw, songsRaw){
+			playlistsRaw.forEach(function(list){
+				var id = list.id;
+				var songs = [];
+				songsRaw.forEach(function(song){
+					if (song.playlistId === id) {
+						songs.push(song);
+					}
+				});
+				playlists[list.name] = {
+					"data": list,
+					"songs": songs
+				};
+			});
+			for (var list in playlists) {
+				$("#playlists").append("<li class=\"list-group-item\">" + playlists[list].data.name + "</li>")
+			}
+			$(".list-group-item").click(function(){
+				var key = $(this).html();
+				var song = playlists[key].songs[0];
+				socket.emit("getStreamUrl", song.track.storeId);
+			});
+		});
+
+		socket.on("playSong", function(url){
+			var audio = new Audio(url);
+			audio.play();
+		});
+	</script>
+</body>
+</html>
