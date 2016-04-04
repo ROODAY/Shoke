@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
 	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-material-design.min.css">
@@ -37,8 +40,17 @@
 		    background: #ff5722;
 		    color: rgba(255,255,255,.84);
 		}
+		#player-controls {
+			text-align: center;
+		}
 		.navbar-brand {
 		    font-size: 45px;
+		}
+		#audio-controls-row {
+			display: none;
+		}
+		#volume-control>* {
+			display: inline-block;
 		}
 	</style>
 </head>
@@ -56,9 +68,17 @@
 	                </button>
 	                <a class="navbar-brand" href="javascript:void(0)">Shoke</a>
 	              </div>
+	              <div class="navbar-collapse collapse navbar-warning-collapse">
+				      <ul class="nav navbar-nav">
+				        <li class="active"><a href="javascript:void(0)">About</a></li>
+				        <li><a href="javascript:void(0)">Disclaimer</a></li>
+				      </ul>
+				      <ul class="nav navbar-nav navbar-right">
+				        <li><a href="javascript:void(0)">Logout</a></li>
+				      </ul>
+				    </div>
 	            </div>
 	          </div>
-	        <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div></div>
 		</div>
 	</div>
 	<div class="row">
@@ -67,6 +87,21 @@
 			<div class="progress">
               <div class="progress-bar" style="width: 0%;"></div>
             </div>
+		</div>
+	</div>
+
+	<div class="row" id="audio-controls-row">
+		<div class="container">
+			<div id="player-controls" class="col-md-4 col-md-offset-4">
+				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="skip-back"><i class="material-icons">fast_rewind</i></a>
+				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="pause"><i class="material-icons">pause</i></a>
+				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="skip-forward"><i class="material-icons">fast_forward</i></a>
+			</div>
+			<div id="volume-control" class="col-md-2 col-md-offset-2">
+				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="volume-down"><i class="material-icons">volume_down</i></a>
+				<div class="slider shor" id="volumeSlider"></div>
+				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="volume-up"><i class="material-icons">volume_down</i></a>
+			</div>
 		</div>
 	</div>
 
@@ -91,7 +126,7 @@
 					</div>
 					<div class="col-md-6">
 						<p>
-							I promise your password is not being abused.
+							If this is your first time logging in, your browser will also prompt you to grant microphone access.
 						</p>
 						<div class="form-group">
 					    	<button id="submit" class="btn btn-raised btn-default">
@@ -117,9 +152,24 @@
 	<script src="js/material.min.js"></script>
 	<script src="js/ripples.min.js"></script>
 	<script src="js/sweetalert.min.js"></script>
+	<script src="js/nouislider.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="js/voice.js"></script>
 	<script>
+
+		var volumeSlider = document.getElementById('volumeSlider');
+		noUiSlider.create(volumeSlider, {
+			start: 50, // Handle start position
+			connect: "lower", // Display a colored bar between the handles
+			range: { // Slider can select '0' to '100'
+				'min': 0,
+				'max': 100
+			}
+		});
+		volumeSlider.noUiSlider.on('update', function( values, handle ) {
+			console.log(values[handle]);
+		});
+
 		$.material.init()
 		var socket = io();
 		var playlists = {};
@@ -134,11 +184,19 @@
 		var progressBarElement = $(".progress-bar");
 		var statusElement = $("#status");
 
+
+
 		function updateSongProgress() {
 			if (isPlaying) {
 				progressBarElement.css("width", (audio.currentTime / currentSongLength) * 100 + "%");
 				var minutes = Math.floor(audio.currentTime / 60);
+				if (minutes.toString().length == 1) {
+		            minutes = "0" + minutes;
+		        }
 				var seconds = Math.round(audio.currentTime - minutes * 60);
+				if (seconds.toString().length == 1) {
+		            seconds = "0" + seconds;
+		        }
 				statusElement.html(currentSongTitle + " by " + currentSongArtist + " | " + minutes + ":" + seconds);
 				setTimeout(updateSongProgress, 1000);
 			}
@@ -147,6 +205,30 @@
 		$("form").submit(function(e) {
 		    e.preventDefault();
 		});
+
+		$("#skip-back").click(prevSong);
+		$("#skip-forward").click(nextSong);
+		$("#pause").click(pausePlay);
+
+		function pausePlay() {
+			if (isPlaying) {
+				pause();
+			} else {
+				play();
+			}
+		}
+
+		function pause() {
+			$("#pause>i").html("play_arrow");
+			audio.pause();
+			isPlaying = false;
+		}
+		function play() {
+			$("#pause>i").html("pause");
+			audio.play();
+			isPlaying = true;
+			updateSongProgress();
+		}
 
 		socket.on("log", function(data){
 			console.log(data);
@@ -171,7 +253,7 @@
 				statusElement.html("Logging into Google Play Music...");
 				progressBarElement.css("width", "0%");
 			} else {
-				sweetAlert("Oops...", "Either your email is invalid or you didn't enter a password!", "error");
+				swal("Oops...", "Either your email is invalid or you didn't enter a password!", "error");
 			}
 		});
 
@@ -202,11 +284,17 @@
 			}
 			$(".list-group-item").click(function(){
 				var key = $(this).html();
-				var song = playlists[key].songs[0];
+				currentSongIndex = Math.floor(Math.random() * (playlists[key].songs.length + 1));
+				var song = playlists[key].songs[currentSongIndex];
 				currentPlaylist = playlists[key];
-				currentSongIndex = 0;
 				console.log(song);
-				socket.emit("getStreamUrl", song.track.storeId);
+				var trackid;
+				if (song.track) {
+					trackid = song.track.storeId;
+				} else {
+					trackid = song.trackId;
+				}
+				socket.emit("getStreamUrl", trackid);
 			});
 			statusElement.html("Ready!");
 			statusElement.css("font-size", "30px");
@@ -215,7 +303,42 @@
 			$("#authentication-row").fadeOut("normal", function() {
 		        $(this).remove();
 		    });
+		    startRecording();
 		});
+
+		function prevSong() {
+			if ((currentSongIndex - 1) < 0) {
+				currentSongIndex = currentPlaylist.songs.length - 1;
+			} else {
+				currentSongIndex -= 1;
+			}
+			var song = currentPlaylist.songs[currentSongIndex];
+			console.log(song);
+			var trackid;
+			if (song.track) {
+				trackid = song.track.storeId;
+			} else {
+				trackid = song.trackId;
+			}
+			socket.emit("getStreamUrl", trackid);
+		}
+
+		function nextSong() {
+			if ((currentSongIndex + 1) >= currentPlaylist.songs.length) {
+				currentSongIndex = 0;
+			} else {
+				currentSongIndex += 1;
+			}
+			var song = currentPlaylist.songs[currentSongIndex];
+			console.log(song);
+			var trackid;
+			if (song.track) {
+				trackid = song.track.storeId;
+			} else {
+				trackid = song.trackId;
+			}
+			socket.emit("getStreamUrl", trackid);
+		}
 
 		socket.on("playSong", function(url){
 			if (audio === undefined) {
@@ -224,7 +347,35 @@
 				audio.pause();
 				audio = new Audio(url);
 			}
+			audio.addEventListener('error', function failed(e) {
+			   // audio playback failed - show a message saying why
+			   // to get the source of the audio element use $(this).src
+			   switch (e.target.error.code) {
+			     case e.target.error.MEDIA_ERR_ABORTED:
+			       swal("Oops...", "You aborted the video playback.", "error");
+			       nextSong();
+			       break;
+			     case e.target.error.MEDIA_ERR_NETWORK:
+			       swal("Oops...", "A network error caused the audio download to fail.", "error");
+			       nextSong();
+			       break;
+			     case e.target.error.MEDIA_ERR_DECODE:
+			       swal("Oops...", "The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.", "error");
+			       nextSong();
+			       break;
+			     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+			       swal("Oops...", "The video audio not be loaded, either because the server or network failed or because the format is not supported.", "error");
+			       nextSong();
+			       break;
+			     default:
+			       swal("Oops...", "An unknown error occurred.", "error");
+			       nextSong();
+			       break;
+			   }
+			 }, true);
+			audio.volume = 0.5;
 			audio.play();
+			$("#audio-controls-row").css("display", "block");
 			currentSongTitle = currentPlaylist.songs[currentSongIndex].track.title;
 			currentSongArtist = currentPlaylist.songs[currentSongIndex].track.artist;
 			currentSongLength = Math.round(currentPlaylist.songs[currentSongIndex].track.durationMillis / 1000)
