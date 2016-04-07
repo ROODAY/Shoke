@@ -10,12 +10,40 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
 
+    <link rel="shortcut icon" href="favicons/favicon.ico">
+	<link rel="icon" sizes="16x16 32x32 64x64" href="favicons/favicon.ico">
+	<link rel="icon" type="image/png" sizes="196x196" href="favicons/favicon-192.png">
+	<link rel="icon" type="image/png" sizes="160x160" href="favicons/favicon-160.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96.png">
+	<link rel="icon" type="image/png" sizes="64x64" href="favicons/favicon-64.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16.png">
+	<link rel="apple-touch-icon" href="favicons/favicon-57.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="favicons/favicon-114.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="favicons/favicon-72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="favicons/favicon-144.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="favicons/favicon-60.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="favicons/favicon-120.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="favicons/favicon-76.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="favicons/favicon-152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/favicon-180.png">
+	<meta name="msapplication-TileColor" content="#1E88E5">
+	<meta name="msapplication-TileImage" content="favicons/favicon-144.png">
+	<meta name="msapplication-config" content="favicons/browserconfig.xml">
+
 	<link rel="stylesheet" href="css/reset.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-material-design.min.css">
 	<link rel="stylesheet" href="css/ripples.min.css">
 	<link rel="stylesheet" href="css/sweetalert.css">
+	<link rel="stylesheet" href="css/snackbar.min.css">
+	<link rel="stylesheet" href="css/material.css">
 	<style>
+		.navbar.navbar-warning {
+		    background-color: #EF6C00 !important;
+		    color: rgba(255,255,255,.84);
+		    box-shadow: 0 3px 10px rgba(0,0,0,0.23),0 3px 10px rgba(0,0,0,0.16);
+		}
 		#playlists-container {
 			display: none;
 		}
@@ -37,7 +65,7 @@
 		    transition: color 0.5s, background 0.5s;
 		}
 		li.list-group-item.well:hover {
-		    background: #ff5722;
+		    background: #EF6C00;
 		    color: rgba(255,255,255,.84);
 		}
 		#player-controls {
@@ -51,6 +79,34 @@
 		}
 		#volume-control>* {
 			display: inline-block;
+		}
+		#skitt-listening-box {
+		    height: 50px !important;
+		}
+		html, body {
+			overflow-x: hidden;
+		}
+		html {
+		  position: relative;
+		  min-height: 100%;
+		}
+		body {
+		  font-size: 16px;
+		  margin-bottom: 50px;
+		}
+		.footer {
+		  position: absolute;
+		  bottom: 0;
+		  width: 100%;
+		  height: 50px;
+		  color: #FCE8D7;
+		  font-size: 2rem;
+		  text-align: center;
+		  background-color: #FF5722;
+		}
+		.footer span {
+		  display: inline-block;
+		  vertical-align: middle;
 		}
 	</style>
 </head>
@@ -70,17 +126,73 @@
 	              </div>
 	              <div class="navbar-collapse collapse navbar-warning-collapse">
 				      <ul class="nav navbar-nav">
-				        <li class="active"><a href="javascript:void(0)">About</a></li>
-				        <li><a href="javascript:void(0)">Disclaimer</a></li>
+				        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#aboutModal">About</a></li>
+				        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#disclaimerModal">Disclaimer</a></li>
 				      </ul>
 				      <ul class="nav navbar-nav navbar-right">
-				        <li><a href="javascript:void(0)">Logout</a></li>
+				        <li><a href="javascript:logout();">Logout</a></li>
 				      </ul>
 				    </div>
 	            </div>
 	          </div>
 		</div>
 	</div>
+
+	<div class="modal" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="About">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        <h3 class="modal-title">(shower + karaoke = Shoke)</h>
+	      </div>
+	      <div class="modal-body">
+	        <p>
+				Shoke allows you to control your <a href="https://play.google.com/music/listen">Google Play</a> music using your voice. The project makes use of <a href="https://github.com/TalAter">TalAter</a>'s <a href="https://github.com/TalAter/annyang">annyang</a>, an easy to use, multi-browser supported voice recognition library. The idea for Shoke came from <a href="https://github.com/athyuttamre">athyuttamre</a>'s <a href="https://github.com/athyuttamre/playshowerbuddy.com">ShowerBuddy</a> project. Originally, Shoke was named Showerify, as it was meant to use the Spotify Web API. However, due to the 30 second song clip limitation of the Spotify Web API, the project was converted to use <a href="https://github.com/jamon">jamon</a>'s <a href="https://github.com/jamon/playmusic">playmusic</a> Node.js library, an unofficial API for Google Play Music.
+			</p>
+			<h3>Supported Commands</h3>
+			<p>
+				<strong>Play</strong>: Plays the current song if paused. <br>
+				<strong>Pause</strong>: Pauses the current song if playing. <br>
+				<strong>Previous</strong>: Plays the previous song in the playlist. <br>
+				<strong>Next</strong>: Plays the next song in the playlist. <br>
+				<strong>Play [playlistname]</strong>: Plays a random song from the specified playlist. <br>
+				<strong>Decrease Volume</strong>: Decreases the volume. <br>
+				<strong>Increase Volume</strong>: Increases the volume. <br>
+				<strong>Mute</strong>: Mutes the volume. <br>
+				<strong>Unmute</strong>: Unmutes the volume. <br>
+				<strong>Set volume to [volume] percent</strong>: Sets the volume to the specified volume. <br>
+				<strong>Logout</strong>: Logs out the current user.
+	        </p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal" id="disclaimerModal" tabindex="-1" role="dialog" aria-labelledby="About">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        <h4 class="modal-title">Disclaimer</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>
+	        	Because Google does not expose an official API for Play Music, there is no OAuth method of logging into your Google account. What this means is that your email and password are being sent plaintext to the Shoke server, which in turn uses those credentials to pretend to log in as you to Google Play Music. Shoke does not store any account credentials, it only uses them to log into Play Music. This is the only way to get access to the music. If sending credentials in such a fashion makes you uncomfortable, then by all means don't use this app. 
+	        </p>
+	        <p>
+	        	If 2 Factor Authentication is enabled for your account, you must have an app password generated that you'll have to paste into the password field in Shoke. You'll also have to have used the mobile Google Play Music app before using Shoke. This is because the unofficial Google Play Music API used takes the app password and uses it to extract an android ID from your account, which allows it to masquerade as you when connecting to the Google Play Music servers.
+	        </p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 	<div class="row">
 		<div class="container" id="loading-container">
 			<span id="status">Initializing Player...</span>
@@ -96,11 +208,6 @@
 				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="skip-back"><i class="material-icons">fast_rewind</i></a>
 				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="pause"><i class="material-icons">pause</i></a>
 				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="skip-forward"><i class="material-icons">fast_forward</i></a>
-			</div>
-			<div id="volume-control" class="col-md-2 col-md-offset-2">
-				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="volume-down"><i class="material-icons">volume_down</i></a>
-				<div class="slider shor" id="volumeSlider"></div>
-				<a href="javascript:void(0)" class="btn btn-default btn-fab" id="volume-up"><i class="material-icons">volume_down</i></a>
 			</div>
 		</div>
 	</div>
@@ -145,243 +252,22 @@
 			<h1>Playlists</h1>
 		<ul class="list-group" id="playlists"></ul>
 		</div>
-	</div>						
+	</div>
+
+	<footer class="footer">
+		<span>&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Rudhra Raveendran - All Rights Reserved</span>
+	 </footer>						
 
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/material.min.js"></script>
 	<script src="js/ripples.min.js"></script>
 	<script src="js/sweetalert.min.js"></script>
-	<script src="js/nouislider.js"></script>
+	<script src=js/snackbar.min.js></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="js/voice.js"></script>
-	<script>
-
-		var volumeSlider = document.getElementById('volumeSlider');
-		noUiSlider.create(volumeSlider, {
-			start: 50, // Handle start position
-			connect: "lower", // Display a colored bar between the handles
-			range: { // Slider can select '0' to '100'
-				'min': 0,
-				'max': 100
-			}
-		});
-		volumeSlider.noUiSlider.on('update', function( values, handle ) {
-			console.log(values[handle]);
-		});
-
-		$.material.init()
-		var socket = io();
-		var playlists = {};
-		var currentPlaylist;
-		var currentSongIndex;
-		var currentSongLength;
-		var currentSongTitle;
-		var currentSongArtist;
-		var isPlaying = false;
-		var audio;
-
-		var progressBarElement = $(".progress-bar");
-		var statusElement = $("#status");
-
-
-
-		function updateSongProgress() {
-			if (isPlaying) {
-				progressBarElement.css("width", (audio.currentTime / currentSongLength) * 100 + "%");
-				var minutes = Math.floor(audio.currentTime / 60);
-				if (minutes.toString().length == 1) {
-		            minutes = "0" + minutes;
-		        }
-				var seconds = Math.round(audio.currentTime - minutes * 60);
-				if (seconds.toString().length == 1) {
-		            seconds = "0" + seconds;
-		        }
-				statusElement.html(currentSongTitle + " by " + currentSongArtist + " | " + minutes + ":" + seconds);
-				setTimeout(updateSongProgress, 1000);
-			}
-		}
-
-		$("form").submit(function(e) {
-		    e.preventDefault();
-		});
-
-		$("#skip-back").click(prevSong);
-		$("#skip-forward").click(nextSong);
-		$("#pause").click(pausePlay);
-
-		function pausePlay() {
-			if (isPlaying) {
-				pause();
-			} else {
-				play();
-			}
-		}
-
-		function pause() {
-			$("#pause>i").html("play_arrow");
-			audio.pause();
-			isPlaying = false;
-		}
-		function play() {
-			$("#pause>i").html("pause");
-			audio.play();
-			isPlaying = true;
-			updateSongProgress();
-		}
-
-		socket.on("log", function(data){
-			console.log(data);
-		});
-
-		socket.on("progressBar", function(val){
-			progressBarElement.css("width", val + "%");
-		});
-
-		socket.on("status", function(text){
-			statusElement.html(text);
-		});
-
-		socket.on("playerReady", function(){
-			statusElement.html("Player is ready!");
-			progressBarElement.css("width", "100%");
-		});
-
-		$("#submit").click(function(){
-			if (document.getElementById("email").checkValidity() && $("#password").val() !== "" && $("#email").val() !== "") {
-				socket.emit("authenticate", $("#email").val(), $("#password").val());
-				statusElement.html("Logging into Google Play Music...");
-				progressBarElement.css("width", "0%");
-			} else {
-				swal("Oops...", "Either your email is invalid or you didn't enter a password!", "error");
-			}
-		});
-
-		socket.on("songData", function(playlistsRaw, songsRaw){
-			statusElement.html("Processing Songs...");
-			progressBarElement.css("width", "0%");
-			var playlistCount = playlistsRaw.length;
-			var progress = 0;
-			playlistsRaw.forEach(function(list){
-				var id = list.id;
-				var songs = [];
-				var songCount = songsRaw.length;
-				var increment = Math.round(100/playlistCount/songCount);
-				songsRaw.forEach(function(song){
-					if (song.playlistId === id) {
-						songs.push(song);
-						progressBarElement.css("width", (progress + increment) + "%");
-					}
-
-				});
-				playlists[list.name] = {
-					"data": list,
-					"songs": songs
-				};
-			});
-			for (var list in playlists) {
-				$("#playlists").append("<li class=\"list-group-item well\">" + playlists[list].data.name + "</li>")
-			}
-			$(".list-group-item").click(function(){
-				var key = $(this).html();
-				currentSongIndex = Math.floor(Math.random() * (playlists[key].songs.length + 1));
-				var song = playlists[key].songs[currentSongIndex];
-				currentPlaylist = playlists[key];
-				console.log(song);
-				var trackid;
-				if (song.track) {
-					trackid = song.track.storeId;
-				} else {
-					trackid = song.trackId;
-				}
-				socket.emit("getStreamUrl", trackid);
-			});
-			statusElement.html("Ready!");
-			statusElement.css("font-size", "30px");
-			progressBarElement.css("width", "100%");
-			$("#playlists-container").css("display", "block");
-			$("#authentication-row").fadeOut("normal", function() {
-		        $(this).remove();
-		    });
-		    startRecording();
-		});
-
-		function prevSong() {
-			if ((currentSongIndex - 1) < 0) {
-				currentSongIndex = currentPlaylist.songs.length - 1;
-			} else {
-				currentSongIndex -= 1;
-			}
-			var song = currentPlaylist.songs[currentSongIndex];
-			console.log(song);
-			var trackid;
-			if (song.track) {
-				trackid = song.track.storeId;
-			} else {
-				trackid = song.trackId;
-			}
-			socket.emit("getStreamUrl", trackid);
-		}
-
-		function nextSong() {
-			if ((currentSongIndex + 1) >= currentPlaylist.songs.length) {
-				currentSongIndex = 0;
-			} else {
-				currentSongIndex += 1;
-			}
-			var song = currentPlaylist.songs[currentSongIndex];
-			console.log(song);
-			var trackid;
-			if (song.track) {
-				trackid = song.track.storeId;
-			} else {
-				trackid = song.trackId;
-			}
-			socket.emit("getStreamUrl", trackid);
-		}
-
-		socket.on("playSong", function(url){
-			if (audio === undefined) {
-				audio = new Audio(url);
-			} else {
-				audio.pause();
-				audio = new Audio(url);
-			}
-			audio.addEventListener('error', function failed(e) {
-			   // audio playback failed - show a message saying why
-			   // to get the source of the audio element use $(this).src
-			   switch (e.target.error.code) {
-			     case e.target.error.MEDIA_ERR_ABORTED:
-			       swal("Oops...", "You aborted the video playback.", "error");
-			       nextSong();
-			       break;
-			     case e.target.error.MEDIA_ERR_NETWORK:
-			       swal("Oops...", "A network error caused the audio download to fail.", "error");
-			       nextSong();
-			       break;
-			     case e.target.error.MEDIA_ERR_DECODE:
-			       swal("Oops...", "The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.", "error");
-			       nextSong();
-			       break;
-			     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-			       swal("Oops...", "The video audio not be loaded, either because the server or network failed or because the format is not supported.", "error");
-			       nextSong();
-			       break;
-			     default:
-			       swal("Oops...", "An unknown error occurred.", "error");
-			       nextSong();
-			       break;
-			   }
-			 }, true);
-			audio.volume = 0.5;
-			audio.play();
-			$("#audio-controls-row").css("display", "block");
-			currentSongTitle = currentPlaylist.songs[currentSongIndex].track.title;
-			currentSongArtist = currentPlaylist.songs[currentSongIndex].track.artist;
-			currentSongLength = Math.round(currentPlaylist.songs[currentSongIndex].track.durationMillis / 1000)
-			isPlaying = true;
-			updateSongProgress();
-		});
-	</script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.3.0/annyang.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/SpeechKITT/0.3.0/speechkitt.min.js"></script>
+	<script src="js/text2num.js"></script>
+	<script src="js/main.js"></script>
 </body>
 </html>

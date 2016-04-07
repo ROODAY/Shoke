@@ -41,6 +41,11 @@ io.on("connection", function(socket){
     });
   });
 
+  socket.on("logout", function(){
+    players[socket.id] = new PlayMusic();
+    socket.emit("loggedout");
+  });
+
   socket.on("getStreamUrl", function(songId){
     players[socket.id].getStreamUrl(songId, function(bool, url) {
       socket.emit("playSong", url);

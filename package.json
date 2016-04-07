@@ -1,7 +1,7 @@
 {
   "name": "shoke",
-  "version": "0.0.1",
-  "description": "Voice-control your Google Play music while you shower.",
+  "version": "1.0.0",
+  "description": "Shoke allows you to control your Google Play music using your voice.",
   "scripts": {
     "start": "node index.js"
   },
