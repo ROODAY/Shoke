@@ -8,14 +8,14 @@ Shoke allows you to control your [Google Play](https://play.google.com/music/lis
 
 ## Supported Commands
 
-**Play**: Plays the current song if paused.
-**Pause**: Pauses the current song if playing.
-**Previous**: Plays the previous song in the playlist.
-**Next**: Plays the next song in the playlist.
-**Play [playlistname]**: Plays a random song from the specified playlist.
-**Decrease Volume**: Decreases the volume.
-**Increase Volume**: Increases the volume.
-**Mute**: Mutes the volume.
-**Unmute**: Unmutes the volume.
-**Set volume to [volume] percent**: Sets the volume to the specified volume.
-**Logout**: Logs out the current user.
+**Play**: Plays the current song if paused.  
+**Pause**: Pauses the current song if playing.  
+**Previous**: Plays the previous song in the playlist.  
+**Next**: Plays the next song in the playlist.  
+**Play [playlistname]**: Plays a random song from the specified playlist.  
+**Decrease Volume**: Decreases the volume.  
+**Increase Volume**: Increases the volume.  
+**Mute**: Mutes the volume.  
+**Unmute**: Unmutes the volume.  
+**Set volume to [volume] percent**: Sets the volume to the specified volume.  
+**Logout**: Logs out the current user.  
